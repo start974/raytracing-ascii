@@ -45,7 +45,7 @@ for (each pixel)
 }
 ```
 - [ ] output
-    - [ ] ppx
+    - [X] ppm
     - [ ] ascii output
 - [ ] objects
     - [ ] interface

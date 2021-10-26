@@ -1,0 +1,6 @@
+(library
+ (name geometry)
+ (inline_tests)
+ (libraries gg aux)
+ (preprocess
+  (pps ppx_inline_test)))

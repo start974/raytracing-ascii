@@ -1,0 +1,6 @@
+(library
+ (name aux)
+ (inline_tests)
+ (libraries gg)
+ (preprocess
+  (pps ppx_inline_test)))

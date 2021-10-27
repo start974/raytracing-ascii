@@ -1,4 +1,4 @@
-module Extension = 
+module Extension =
 struct
 
     type t =
@@ -13,7 +13,7 @@ struct
 
 end
 
-module type Pixel = 
+module type Pixel =
 sig
     type t
 
@@ -27,7 +27,7 @@ sig
 end
 
 
-module MakePixel(Pix: Pixel): Image.Pixel with type t = Pix.t = 
+module MakePixel(Pix: Pixel): Image.Pixel with type t = Pix.t =
 struct
     type t = Pix.t
 
@@ -36,7 +36,7 @@ struct
             Pix.header_number_string
             width height
             Pix.header_max_value
-    
+
     let write_buffer out_channel buffer =
         Buffer.(
             output_buffer out_channel buffer;
@@ -46,13 +46,13 @@ struct
 
     let add_buffer out_channel buffer pixel =
         let pixel_string = Pix.to_string pixel ^ " "in
-        try 
+        try
             Buffer.add_string buffer pixel_string
         with
             Failure _ -> write_buffer out_channel buffer;
         Buffer.add_string buffer pixel_string
 
-    let write_image out_channel data = 
+    let write_image out_channel data =
         let height = Array.length data
         and width = Array.length data.(0) in
         write_header out_channel height width;
@@ -63,7 +63,7 @@ struct
 end
 
 
-module PixelPBM: Image.Pixel = MakePixel(
+module PixelPBM = MakePixel(
     struct
         type t = bool
 
@@ -96,8 +96,8 @@ module PixelPPM = MakePixel(
 
         (*let default_value = (0, 0, 0) *)
 
-        let to_string (r, g, b) = 
-            string_of_int r ^ " " ^ 
+        let to_string (r, g, b) =
+            string_of_int r ^ " " ^
             string_of_int g ^ " " ^
             string_of_int b
 
@@ -108,17 +108,17 @@ module PixelPPM = MakePixel(
 
 module PixelMaker =
 struct
-    
-    module PixelPBM = PixelPPM 
-    module PixelPGM = PixelPGM 
-    module PixelPPM = PixelPPM 
 
-    let check_int_value max_value value = 
-        if value > max_value || value < 0 then 
+    module PixelPBM = PixelPBM
+    module PixelPGM = PixelPGM
+    module PixelPPM = PixelPPM
+
+    let check_int_value max_value value =
+        if value > max_value || value < 0 then
             raise (Invalid_argument "invalid value")
 
-        
-    let pixel_PBM (value: bool) = 
+
+    let pixel_PBM (value: bool) =
         value
 
     let pixel_PBM_default = false
@@ -126,7 +126,7 @@ struct
     let pixel_PGM value =
         check_int_value 15 value;
         value
-    
+
     let pixel_PGM_default = 0
 
     let pixel_PPM r g b =

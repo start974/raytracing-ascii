@@ -1,4 +1,3 @@
-    
 module Extension = 
 struct
 
@@ -12,130 +11,134 @@ struct
         | PGM -> ".pgm"
         | PPM -> ".ppm"
 
-    let number_string = function
-    | PBM -> "P1"
-    | PGM -> "P2"
-    | PPM -> "P3"
+end
 
+module type Pixel = 
+sig
+    type t
+
+    (*val default_value : t *)
+
+    val to_string: t -> string
+
+    val header_max_value: string
+
+    val header_number_string: string
 end
 
 
-module Pixel = 
+module MakePixel(Pix: Pixel): Image.Pixel with type t = Pix.t = 
+struct
+    type t = Pix.t
+
+    let write_header out_channel height width =
+        Printf.fprintf out_channel "%s\n%u %u\n%s/n"
+            Pix.header_number_string
+            width height
+            Pix.header_max_value
+    
+    let write_buffer out_channel buffer =
+        Buffer.(
+            output_buffer out_channel buffer;
+            clear buffer;
+            add_char buffer '\n';
+        )
+
+    let add_buffer out_channel buffer pixel =
+        let pixel_string = Pix.to_string pixel ^ " "in
+        try 
+            Buffer.add_string buffer pixel_string
+        with
+            Failure _ -> write_buffer out_channel buffer;
+        Buffer.add_string buffer pixel_string
+
+    let write_image out_channel data = 
+        let height = Array.length data
+        and width = Array.length data.(0) in
+        write_header out_channel height width;
+        (* write data *)
+        let buffer = Buffer.create 70 in
+        Array.iter (Array.iter (add_buffer out_channel buffer)) data;
+        write_buffer out_channel buffer
+end
+
+
+module PixelPBM: Image.Pixel = MakePixel(
+    struct
+        type t = bool
+
+        (*let default_value = false *)
+
+        let to_string pixel =
+            string_of_int (Bool.to_int pixel)
+
+        let header_max_value = ""
+
+        let header_number_string = "P1"
+    end)
+
+module PixelPGM = MakePixel(
+    struct
+        type t = int
+
+        (*let default_value = 0 *)
+
+        let to_string = string_of_int
+
+        let header_max_value = "15"
+
+        let header_number_string = "P2"
+    end)
+
+module PixelPPM = MakePixel(
+    struct
+        type t = (int * int * int)
+
+        (*let default_value = (0, 0, 0) *)
+
+        let to_string (r, g, b) = 
+            string_of_int r ^ " " ^ 
+            string_of_int g ^ " " ^
+            string_of_int b
+
+        let header_max_value = "255"
+
+        let header_number_string = "P3"
+    end)
+
+module PixelMaker =
 struct
     
-    type t =
-        | PBM of bool
-        | PGM of int
-        | PPM of (int * int * int)
+    module PixelPBM = PixelPPM 
+    module PixelPGM = PixelPGM 
+    module PixelPPM = PixelPPM 
 
-    let to_string pixel =
-    match pixel with
-    | PBM x -> string_of_int (Bool.to_int x)
-    | PGM x -> string_of_int x
-    | PPM (x, y, z) ->
-        string_of_int x ^ " " ^ 
-        string_of_int y ^ " " ^
-        string_of_int z
+    let check_int_value max_value value = 
+        if value > max_value || value < 0 then 
+            raise (Invalid_argument "invalid value")
+
+        
+    let pixel_PBM (value: bool) = 
+        value
+
+    let pixel_PBM_default = false
+
+    let pixel_PGM value =
+        check_int_value 15 value;
+        value
     
-    let default_value = function 
-    | Extension.PBM -> PBM false
-    | Extension.PGM -> PGM 0
-    | Extension.PPM -> PPM (0, 0, 0)
+    let pixel_PGM_default = 0
 
-    let max_value = function
-    | Extension.PBM -> 2
-    | Extension.PGM -> 15
-    | Extension.PPM -> 255
+    let pixel_PPM r g b =
+        let check_max_value_ppm = check_int_value 255 in
+        check_max_value_ppm r;
+        check_max_value_ppm g;
+        check_max_value_ppm b;
+        (r, g, b)
+
+    let pixel_PPM_default = (0, 0, 0)
 end
 
-type t = 
-{
-    extension : Extension.t;
-    width : int;
-    height : int;
-    data : Pixel.t Array.t
-}
-
-
-let make width height extension = 
-{
-    extension = extension;
-    width = width;
-    height = height;
-    data = Array.make (width * height) (Pixel.default_value extension);
-}
-
-let get_width image =
-    image.width
-
-let get_height image =
-    image.height
-
-let get_extension image = 
-    image.extension
-
-let get_max_value image = 
-    Pixel.max_value (get_extension image)
-
-let check_in_image image x y = 
-    if x > image.width then
-        raise (Invalid_argument "x > image.widht")
-    else if y > image.height then
-        raise (Invalid_argument "y > image.height")
-
-
-
-let check_pixel_valid pixel =
-    let raise_if_sup_255 x max_value = 
-        if x > max_value || x < 0 then 
-            raise (Invalid_argument "value > image.height")
-    in
-    match pixel with
-    | Pixel.PGM x -> raise_if_sup_255 x (Pixel.max_value Extension.PGM)
-    | Pixel.PPM (x, y, z) ->
-        let max_value = (Pixel.max_value Extension.PPM) in
-        raise_if_sup_255 x max_value;
-        raise_if_sup_255 y max_value;
-        raise_if_sup_255 z max_value
-    | _ -> ()
-
-
-let get_data_index image x y =
-    check_in_image image x y;
-    y * image.width + x
-
-let get image x y =
-    let index = get_data_index image x y in
-    Array.get image.data index
-
-
-let set image x y pixel =
-    check_pixel_valid pixel;
-    let index = get_data_index image x y in
-    Array.set image.data index pixel
-
-
-let size_string width height = 
-    string_of_int width ^ " " ^ string_of_int height
-
-let limit_string = 70
-
-let f_fold_string (count, acc) x = 
-        let elm = Pixel.to_string x in
-        let size = String.length elm in
-        if count + size >= limit_string then
-            (size, acc ^ "\n" ^ elm)
-        else
-            (count + size + 1, acc ^ " " ^ elm)
-
-let data_to_string data =
-    let (_, res) = Array.fold_left f_fold_string (0, "") data in
-    String.sub res 1 (String.length res - 1)
-
-
-let to_string image = 
-    (Extension.number_string (get_extension image)) ^ "\n" ^
-    (size_string (get_width image) (get_height image)) ^ "\n" ^
-    (string_of_int (get_max_value image)) ^ "\n" ^ 
-    (data_to_string image.data)
-
+module ImagePBM = Image.Make(PixelPBM)
+module ImagePGM = Image.Make(PixelPGM)
+module ImagePPM = Image.Make(PixelPPM)

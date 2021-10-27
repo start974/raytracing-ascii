@@ -1,5 +1,6 @@
 open Gg
 open Aux
+
 let square x = x *. x
 
 type t = {center: v3; radius: float}
@@ -90,11 +91,15 @@ let intersection_with_ray sphere ray =
     else None
   else None
 
-let is_close_v3 v1 v2 =
-  V3.(
-    Float.is_close (x v1) (x v2)
-    && Float.is_close (y v1) (y v2)
-    && Float.is_close (z v1) (z v2))
+let reflexion sphere ray =
+  intersection_with_ray sphere ray
+  |> Option.map (fun intersection ->
+         let center = center sphere in
+         let normal = V3.(intersection - center) in
+         Ray.reflexion ray intersection normal )
+
+
+
 
 let%test "sphere intersection 1" =
   let sphere = v V3.zero 1. in
@@ -104,4 +109,4 @@ let%test "sphere intersection 1" =
       false
   | Some p ->
       let ep = V3.v (-1.) 0. 0. in
-      is_close_v3 ep p
+      V3.is_close ep p

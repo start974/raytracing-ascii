@@ -11,7 +11,7 @@ let ( - ) = sub
 
 let ( -~ ) = sub 0.
 
-let is_close ?(eps = 0.001) x y = is_zero ~eps (x - y)
+let is_close ?(eps = 0.00001) x y = is_zero ~eps (x - y)
 
 let%test "is close 1" = is_close 1. 1.
 

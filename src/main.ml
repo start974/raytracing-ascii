@@ -1,7 +1,8 @@
 open Output
 
 let () = 
-  let image = Pixmap.make 10 10 PixExt.PPM in
-  Pixmap.set image 5 5 (PixPixel.PPM (255, 100, 222));
-  print_endline (Pixmap.to_string image);
+  let mkPix = MkPixel_ascii.make ['0'; '1'] in
+  let default_pix = MkPixel_ascii.default_pixel mkPix in
+  let image = Image_ascii.make 10 5 default_pix in 
+  Image_ascii.write stdout image;
   

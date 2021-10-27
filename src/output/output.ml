@@ -1,7 +1,11 @@
-module Image_ascii = Ascii.Image
+module Image_ascii : Image.S with type pixel = char = Ascii.Image
+
 module MkPixel_ascii = Ascii.PixelMaker
 
-module Image_PBM = Pixmap.ImagePBM
-module Image_PGM = Pixmap.ImagePGM
-module Image_PPM = Pixmap.ImagePPM
+module Image_PBM : Image.S with type pixel = bool = Pixmap.ImagePBM
+
+module Image_PGM : Image.S with type pixel = int = Pixmap.ImagePGM
+
+module Image_PPM : Image.S with type pixel = int * int * int = Pixmap.ImagePPM
+
 module MkPixel_pixmap = Pixmap.PixelMaker

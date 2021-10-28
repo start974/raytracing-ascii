@@ -46,14 +46,14 @@ let%test "reflexion 1" =
   origin = eorigin && V3.is_close direction edirection
 
 (* let%test "reflexion 2" =
-  let ray = v (V3.v 0. 0. 0.) (V3.v 1. 0. 0.) in
-  let intersection = V3.v 2. 0. 0. in
-  let normal = V3.v (-1.) 1. 0. in
-  let {origin; direction} = reflexion ray intersection normal in
-  let eorigin = intersection in
-  let edirection = V3.v 0. 1. 0. in
-  V3.pp Format.std_formatter direction ;
-  origin = eorigin && V3.is_close direction edirection *)
+   let ray = v (V3.v 0. 0. 0.) (V3.v 1. 0. 0.) in
+   let intersection = V3.v 2. 0. 0. in
+   let normal = V3.v (-1.) 1. 0. in
+   let {origin; direction} = reflexion ray intersection normal in
+   let eorigin = intersection in
+   let edirection = V3.v 0. 1. 0. in
+   V3.pp Format.std_formatter direction ;
+   origin = eorigin && V3.is_close direction edirection *)
 
 let%test "ray mem" =
   let ray1 = v V3.zero (V3.v 1. 2. 3.)

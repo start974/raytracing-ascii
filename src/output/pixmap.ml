@@ -17,23 +17,35 @@ end
 module MakePixel (Pix : Pixel) : Image.Pixel with type t = Pix.t = struct
   type t = Pix.t
 
-  let write_header out_channel height width =
-    Printf.fprintf out_channel "%s\n%u %u\n%s\n" Pix.header_number_string width
-      height Pix.header_max_value
+  let write_header buffer height width =
+    let add_string = Buffer.add_string buffer
+    and new_line () = Buffer.add_char buffer '\n'
+    and sep () = Buffer.add_char buffer ' ' in
+    let add_int x = add_string @@ string_of_int x in
+    add_string Pix.header_number_string ;
+    new_line () ;
+    add_int width ;
+    sep () ;
+    add_int height ;
+    new_line () ;
+    add_string Pix.header_max_value ;
+    new_line ()
 
   let add_buffer buffer pixel =
     let pixel_string = Pix.to_string pixel ^ "\n" in
     Buffer.add_string buffer pixel_string
 
-  let write_image out_channel data =
+  let write_image data =
     let height = Array.length data and width = Array.length data.(0) in
-    write_header out_channel height width ;
-    (* write data *)
-    let buffer =
-      Buffer.create (height * width * (String.length Pix.header_max_value + 1))
+    let default_size =
+      height * width * (String.length Pix.header_max_value + 1)
     in
+    let buffer = Buffer.create default_size in
+    (* write header *)
+    write_header buffer height width ;
+    (* write data *)
     Array.iter (Array.iter (add_buffer buffer)) data ;
-    Buffer.output_buffer out_channel buffer
+    buffer
 end
 
 module PixelPBM = MakePixel (struct

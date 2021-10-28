@@ -30,6 +30,9 @@ module type S = sig
   (raise [Invalid_argument] if [x] or [y] out of bound)
   *)
 
+  val to_string : t -> string
+  (**[to_string] string*)
+
   val write : t -> out_channel -> unit
   (** [write] write image [Image.t]*)
 end
@@ -37,7 +40,7 @@ end
 module type Pixel = sig
   type t
 
-  val write_image : out_channel -> t Array.t Array.t -> unit
+  val write_image : t Array.t Array.t -> Buffer.t
   (*[image to string] convert image of image to string*)
 end
 
@@ -61,5 +64,10 @@ module Make (Pix : Pixel) : S with type pixel = Pix.t = struct
 
   let set image x y pixel = image.data.(y).(x) <- pixel
 
-  let write image out_channel = Pix.write_image out_channel image.data
+  let get_buffer image = Pix.write_image image.data
+
+  let to_string image = Buffer.contents @@ get_buffer image
+
+  let write image out_channel =
+    Buffer.output_buffer out_channel @@ get_buffer image
 end

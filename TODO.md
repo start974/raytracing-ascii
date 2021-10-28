@@ -46,7 +46,7 @@ for (each pixel)
 ```
 - [ ] output
     - [X] ppm
-    - [ ] ascii output
+    - [X] ascii output
 - [ ] objects
     - [ ] interface
     - [ ] sphere

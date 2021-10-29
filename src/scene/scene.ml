@@ -29,5 +29,6 @@ let compute_color {lights; objects; _} ray =
   | None ->
       Lights.AmbiantLight.get_color @@ Lights.get_ambiant lights
   | Some (_, obj) ->
+      print_endline "intesection" ;
       Objects.ObjectScene.get_color obj
 (*TODO *)

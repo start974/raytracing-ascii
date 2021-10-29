@@ -73,8 +73,9 @@ module Make (Pix : Pixel) : S with type pixel = Pix.t = struct
     let add_pixel buff_image pixel =
       let {image; x; y} = buff_image in
       set image x y pixel ;
-      if x + 1 <= get_width image then buff_image.x <- x + 1
-      else if y + 1 <= get_height image then (
+      Printf.printf "%d %d\n" x y ;
+      if x + 1 < get_width image then buff_image.x <- x + 1
+      else if y + 1 < get_height image then (
         buff_image.x <- 0 ;
         buff_image.y <- y + 1 )
 

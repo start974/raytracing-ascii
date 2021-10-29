@@ -1,4 +1,5 @@
 open Geometry
+open Aux
 module Camera = Camera
 module Screen = Screen
 module Lights = Lights
@@ -9,26 +10,43 @@ type t =
 
 let make camera screen lights objects = {camera; screen; lights; objects}
 
-let get_camera {camera; _} = camera
+let camera {camera; _} = camera
 
-let get_screen {screen; _} = screen
+let screen {screen; _} = screen
 
-let get_lights {lights; _} = lights
+let lights {lights; _} = lights
 
-let get_objects {objects; _} = objects
+let objects {objects; _} = objects
 
-let iter_pos {screen; camera; _} f = Screen.iter screen camera f
+let point {screen; camera; _} =
+  let middle_screen = Camera.middle_screen camera
+  and ratio = Screen.aspect_ratio screen in
+  let half_width = Float.((of_int @@ Screen.width screen) * ratio / 2.)
+  and half_height = Float.((of_int @@ Screen.height screen) * ratio / 2.) in
+  let p0 =
+    V3.(
+      v
+        Float.(x middle_screen - half_width)
+        Float.(y middle_screen + half_height)
+        (z middle_screen))
+  in
+  fun px py ->
+    V3.(p0 + v Float.(of_int px * ratio) Float.(of_int py * ratio) 0.)
 
-let iter_ray scene f =
-  let cam_pos = Camera.get_position @@ get_camera scene in
-  let get_ray pos_pix = Ray.v cam_pos pos_pix in
-  iter_pos scene (fun pos -> f @@ get_ray pos)
+let ray scene =
+  let {camera; _} = scene in
+  let origin = Camera.position camera and point = point scene in
+  fun x y ->
+    let point_screen = point x y in
+    Ray.v origin V3.(point_screen - origin)
 
-let compute_color {lights; objects; _} ray =
-  match Objects.nearest_intersection objects ray with
+let get_color scene x y =
+  let {lights; objects; _} = scene and ray = ray scene x y in
+  let opt_obj = Objects.nearest_intersection objects ray in
+  match opt_obj with
   | None ->
       Lights.AmbiantLight.get_color @@ Lights.get_ambiant lights
   | Some (_, obj) ->
-      print_endline "intesection" ;
       Objects.ObjectScene.get_color obj
-(*TODO *)
+
+let screen_size {screen; _} = Screen.size screen

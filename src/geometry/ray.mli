@@ -3,6 +3,7 @@ open Gg
 type t
 
 val v : v3 -> v3 -> t
+(**[v orgin direction]*)
 
 val origin : t -> v3
 

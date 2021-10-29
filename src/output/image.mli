@@ -8,24 +8,27 @@ module type S = sig
   (** [data] is matrix of mixel (with size width * height)*)
   type data = pixel Array.t Array.t
 
-  val make : int -> int -> pixel -> t
+  val init : width:int -> height:int -> (int -> int -> pixel) -> t
+
+  (** [init]*)
+  val make : width:int -> height:int -> pixel -> t
   (** [make] make image with [width], [height], default_pixel*)
 
-  val get_width : t -> int
-  (** [get_width] return width of [Image.t] *)
+  val width : t -> int
+  (** [width] return width of [Image.t] *)
 
-  val get_height : t -> int
-  (** [get_height] return height of [Image.t] *)
+  val height : t -> int
+  (** [height] return height of [Image.t] *)
 
   val size : t -> int
   (** [size] of image *)
 
-  val get : t -> int -> int -> pixel
+  val get : t -> x:int -> y:int -> pixel
   (** [get] return [pixel] at position [x], [y] of [Image.t]
   (raise [Invalid_argument] if [x] or [y] out of bound)
   *)
 
-  val set : t -> int -> int -> pixel -> unit
+  val set : t -> x:int -> y:int -> pixel -> unit
   (** [set] a pixel [pixel] at position [x], [y] in [Image.t]
   (raise [Invalid_argument] if [x] or [y] out of bound)
   *)
@@ -35,18 +38,6 @@ module type S = sig
 
   val write : t -> out_channel -> unit
   (** [write] write image [Image.t]*)
-
-  module Buffered : sig
-    type b
-
-    val make : t -> b
-    (** [make] a buffered [image] *)
-
-    val add_pixel : b -> pixel -> unit
-    (** [add_pixel] next *)
-
-    val get_image : b -> t
-  end
 end
 
 module type Pixel = sig

@@ -3,3 +3,4 @@
 
 module Float = IFloat
 module V3 = V3
+module Array = Array

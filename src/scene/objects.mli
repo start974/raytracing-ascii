@@ -4,6 +4,8 @@ open Geometry
 module ObjectScene : sig
   type obj = Sphere.t
 
+  type color = V3.t
+
   type t
 
   val make : obj -> color -> t
@@ -11,6 +13,8 @@ module ObjectScene : sig
 
   val get_color : t -> color
   (**[get_color] color of the object*)
+
+  val get_colot_with_light : t -> Lights.t -> color
 end
 
 type t
@@ -18,8 +22,6 @@ type t
 val make : ObjectScene.t List.t -> t
 (* [make] objects collections *)
 
-(*
-  type obj
-
-  val nearest_intersection t -> ray -> option (p3 * obj)
-  *)
+val nearest_intersection : t -> Ray.t -> (p3 * ObjectScene.t) Option.t
+(*[nearest intersection] between objects and [ray] return intersection point and object
+  if found intersection*)

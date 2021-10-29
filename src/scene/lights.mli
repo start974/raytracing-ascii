@@ -1,8 +1,9 @@
-open Aux
+type t
 
-type t = V3.t
+val make : float -> t
 
-val make : V3.t -> t
+val get_ambiant : t -> float
+
 (*
 type ambiantLight
 

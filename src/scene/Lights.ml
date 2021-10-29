@@ -1,5 +1,11 @@
-open Aux
+op
 
-type t = V3.t
+module AmbiantLight = struct
+  type t = V3.t
+end
 
-let make color = color
+type t = {ambiant: float}
+
+let make ambiant = {ambiant}
+
+let get_ambiant {ambiant} = ambiant

@@ -8,10 +8,12 @@ type t =
 
 let make camera screen lights objects = {camera; screen; lights; objects}
 
-let get_camera scene = scene.camera
+let get_camera {camera; _} = camera
 
-let get_screen scene = scene.screen
+let get_screen {screen; _} = screen
 
-let get_lights scene = scene.lights
+let get_lights {lights; _} = lights
 
-let objects scene = scene.objects
+let get_objects {objects; _} = objects
+
+let iter_pos {screen; camera; _} f = Screen.iter screen camera f

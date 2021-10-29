@@ -1,5 +1,8 @@
-type t
+open Aux
 
+type t = V3.t
+
+val make : V3.t -> t
 (*
 type ambiantLight
 

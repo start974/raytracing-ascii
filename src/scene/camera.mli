@@ -11,3 +11,6 @@ val get_position : t -> p3
 
 val get_forward : t -> V3.t
 (** vector to positionate screen *)
+
+val middle_screen : t -> p3
+(** [middle] middle of the screen *)

@@ -1,3 +1,5 @@
+open Gg
+
 type t
 
 val make : int -> int -> float -> t
@@ -11,3 +13,7 @@ val get_height : t -> int
 
 val get_aspect_ratio : t -> float
 (** to set aspect ratio *)
+
+val iter : t -> Camera.t -> (p3 -> unit) -> unit
+(** [iterate] on all position of screen
+    send [pos3] to a function to iterate*)

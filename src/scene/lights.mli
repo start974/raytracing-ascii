@@ -1,8 +1,16 @@
 type t
 
-val make : float -> t
+module AmbiantLight : sig
+  type t
 
-val get_ambiant : t -> float
+  val make : int -> int -> int -> t
+
+  val get_color : t -> Objects.ObjectScene.color
+end
+
+val make : AmbiantLight.t -> t
+
+val get_ambiant : t -> AmbiantLight.t
 
 (*
 type ambiantLight

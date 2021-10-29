@@ -12,10 +12,6 @@ module ObjectScene = struct
 
   let get_color {color; _} = color
 
-  let get_colot_with_light {color; _} ligth =
-    let i_a = Lights.get_ambiant ligth in
-    V3.(i_a * color)
-
   let intersection {obj; _} ray = Sphere.intersection_with_ray obj ray
 end
 

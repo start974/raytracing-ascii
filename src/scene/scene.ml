@@ -25,5 +25,9 @@ let iter_ray scene f =
   iter_pos scene (fun pos -> f @@ get_ray pos)
 
 let compute_color {lights; objects; _} ray =
-  match Objects.nearest_intersection objects ray with None -> (0, 0, 0)
+  match Objects.nearest_intersection objects ray with
+  | None ->
+      Lights.AmbiantLight.get_color @@ Lights.get_ambiant lights
+  | Some (_, obj) ->
+      Objects.ObjectScene.get_color obj
 (*TODO *)

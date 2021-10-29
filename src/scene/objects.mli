@@ -13,8 +13,6 @@ module ObjectScene : sig
 
   val get_color : t -> color
   (**[get_color] color of the object*)
-
-  val get_colot_with_light : t -> Lights.t -> color
 end
 
 type t

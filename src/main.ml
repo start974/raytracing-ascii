@@ -5,14 +5,14 @@ open Aux
 open Scene
 
 let minimal_scene () =
-  let camera = Camera.make P3.(v 0. 0. 0.) P3.(v 0. 1. 0.)
-  and screen = Screen.make 500 250 (16. /. 9.)
+  let camera = Camera.make P3.(v 0. 0. 0.) V3.(v 0. 1. 0.)
+  and screen = Screen.make 5 5 (16. /. 9.)
   and ambiant = Lights.AmbiantLight.make 1 1 1 in
   let lights = Lights.make ambiant
   and objects =
     Objects.make
       [ Scene.Objects.ObjectScene.(
-          make (Sphere.v P3.(v 0. 5. 0.) 10.) V3.(v 0. 200. 0.)) ]
+          make (Sphere.v P3.(v 0. 10. 0.) 10.) V3.(v 0. 200. 0.)) ]
   in
   Scene.make camera screen lights objects
 

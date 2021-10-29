@@ -12,30 +12,28 @@ module ObjectScene = struct
 
   let get_color {color; _} = color
 
-  let intersection {obj; _} ray = Sphere.intersection_with_ray obj ray
+  let intersection {obj; _} ray =
+    print_endline (V3.to_string (Ray.origin ray)) ;
+    print_endline (V3.to_string (Ray.direction ray)) ;
+    let res = Sphere.intersection_with_ray obj ray in
+    ( match res with
+    | None ->
+        print_endline "Nop"
+    | Some _ ->
+        print_endline "intersecion" ) ;
+    print_endline "----" ; res
 end
 
 type t = ObjectScene.t List.t
 
 let make obj_list = obj_list
 
-let min_intersection ray acc obj =
-  match ObjectScene.intersection obj ray with
-  | None ->
-      acc
-  | Some p -> (
-      let dist = Ray.distance_from_point ray p in
-      match acc with
-      | None ->
-          None
-      | Some (d, _, _) ->
-          if d < dist then acc else Some (dist, p, obj) )
-
 let nearest_intersection objects ray =
-  let extract_result = function
-    | None ->
-        None
-    | Some (_, p, o) ->
-        Some (p, o)
+  let distance = function None -> Float.infinity | Some (d, _, _) -> d in
+  let intersections =
+    objects
+    |> List.map (fun o ->
+           ObjectScene.intersection o ray
+           |> Option.map (fun p -> (Ray.distance_from_point2 ray p, p, o)) )
   in
-  extract_result @@ List.fold_left (min_intersection ray) None objects
+  List.min intersections distance None |> Option.map (fun (_, p, o) -> (p, o))

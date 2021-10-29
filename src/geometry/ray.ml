@@ -3,7 +3,9 @@ open Aux
 
 type t = {origin: p3; direction: v3}
 
-let v origin direction = {origin; direction= V3.unit direction}
+let v origin direction =
+  assert (not @@ Float.is_close (V3.norm2 direction) 0.) ;
+  {origin; direction= V3.unit direction}
 
 let origin v = v.origin
 

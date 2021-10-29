@@ -27,7 +27,7 @@ let point {screen; camera; _} =
     V3.(
       v
         Float.(x middle_screen - half_width)
-        Float.(y middle_screen + half_height)
+        Float.(y middle_screen - half_height)
         (z middle_screen))
   in
   fun px py ->
@@ -46,7 +46,9 @@ let get_color scene x y =
   match opt_obj with
   | None ->
       Lights.AmbiantLight.get_color @@ Lights.get_ambiant lights
-  | Some (_, obj) ->
+  | Some (_p, obj) ->
+      print_endline (V3.to_string _p) ;
+      print_endline "colision" ;
       Objects.ObjectScene.get_color obj
 
 let screen_size {screen; _} = Screen.size screen

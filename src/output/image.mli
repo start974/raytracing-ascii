@@ -8,10 +8,10 @@ module type S = sig
   (** [data] is matrix of mixel (with size width * height)*)
   type data = pixel Array.t Array.t
 
-  val init : width:int -> height:int -> (int -> int -> pixel) -> t
+  val init : int -> int -> (int -> int -> pixel) -> t
+  (** [init width height f (x y)] *)
 
-  (** [init]*)
-  val make : width:int -> height:int -> pixel -> t
+  val make : int -> int -> pixel -> t
   (** [make] make image with [width], [height], default_pixel*)
 
   val width : t -> int
@@ -23,12 +23,12 @@ module type S = sig
   val size : t -> int
   (** [size] of image *)
 
-  val get : t -> x:int -> y:int -> pixel
+  val get : t -> int -> int -> pixel
   (** [get] return [pixel] at position [x], [y] of [Image.t]
   (raise [Invalid_argument] if [x] or [y] out of bound)
   *)
 
-  val set : t -> x:int -> y:int -> pixel -> unit
+  val set : t -> int -> int -> pixel -> unit
   (** [set] a pixel [pixel] at position [x], [y] in [Image.t]
   (raise [Invalid_argument] if [x] or [y] out of bound)
   *)

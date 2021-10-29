@@ -13,10 +13,9 @@ module type S = sig
 
   type data = pixel Array.t Array.t
 
-  val init : width:int -> height:int -> (int -> int -> pixel) -> t
+  val init : int -> int -> (int -> int -> pixel) -> t
 
-  val make : width:int -> height:int -> pixel -> t
-  (** [init]*)
+  val make : int -> int -> pixel -> t
 
   val width : t -> int
 
@@ -24,9 +23,9 @@ module type S = sig
 
   val size : t -> int
 
-  val get : t -> x:int -> y:int -> pixel
+  val get : t -> int -> int -> pixel
 
-  val set : t -> x:int -> y:int -> pixel -> unit
+  val set : t -> int -> int -> pixel -> unit
 
   val to_string : t -> string
 
@@ -40,11 +39,11 @@ module Make (Pix : Pixel) : S with type pixel = Pix.t = struct
 
   type t = {width: int; height: int; data: data}
 
-  let init ~width ~height f =
+  let init width height f =
     {width; height; data= Array.init_matrix height width f}
 
-  let make ~width ~height default_pixel =
-    init ~width ~height (fun _ _ -> default_pixel)
+  let make width height default_pixel =
+    init width height (fun _ _ -> default_pixel)
 
   let width image = image.width
 
@@ -52,9 +51,9 @@ module Make (Pix : Pixel) : S with type pixel = Pix.t = struct
 
   let size image = width image * height image
 
-  let get image ~x ~y = image.data.(y).(x)
+  let get image x y = image.data.(y).(x)
 
-  let set image ~x ~y pixel = image.data.(y).(x) <- pixel
+  let set image x y pixel = image.data.(y).(x) <- pixel
 
   let get_buffer image = Pix.write_image image.data
 

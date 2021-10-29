@@ -12,16 +12,7 @@ module ObjectScene = struct
 
   let get_color {color; _} = color
 
-  let intersection {obj; _} ray =
-    print_endline (V3.to_string (Ray.origin ray)) ;
-    print_endline (V3.to_string (Ray.direction ray)) ;
-    let res = Sphere.intersection_with_ray obj ray in
-    ( match res with
-    | None ->
-        print_endline "Nop"
-    | Some _ ->
-        print_endline "intersecion" ) ;
-    print_endline "----" ; res
+  let intersection {obj; _} ray = Sphere.intersection_with_ray obj ray
 end
 
 type t = ObjectScene.t List.t

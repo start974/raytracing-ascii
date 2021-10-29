@@ -1,70 +1,40 @@
-module Extension: 
-sig
+module Extension : sig
+  type t = PBM | PGM | PPM
 
-    type t =
-        | PBM
-        | PGM
-        | PPM
-
-    val to_string : t -> string
-    (** get extension using to make file *)
-
+  val to_string : t -> string
+  (** [to_string] get extension using to make file (ex: ".pbm")*)
 end
 
-module Pixel :
-sig
-    type t =
-        | PBM of bool
-        | PGM of int
-        | PPM of (int * int * int)
-    
-    val default_value: Extension.t -> t
-    (* make default value with extension *)
+module PixelMaker : sig
+  module PixelPBM : Image.Pixel with type t = bool
 
-    val to_string: t -> string
-    (* get string of pixel *)
+  module PixelPGM : Image.Pixel with type t = int
+
+  module PixelPPM : Image.Pixel with type t = int * int * int
+
+  val pixel_PBM : bool -> PixelPBM.t
+  (**[pixel_PBM] make a PBM pixel *)
+
+  val pixel_PBM_default : PixelPBM.t
+  (**[pixel_PBM] make a PBM default pixel *)
+
+  val pixel_PGM : int -> PixelPGM.t
+  (**[pixel_PGM] make a PGM pixel
+    (raise [Invalid_argument] if value is not between 0 and 255*)
+
+  val pixel_PGM_default : PixelPGM.t
+  (**[pixel_PBM] make a PGM default pixel *)
+
+  val pixel_PPM : int -> int -> int -> PixelPPM.t
+  (**[pixel_PPM] make a PPM pixel with [r, g, b] values
+    (raise [Invalid_argument] if r, g, b values not beetween 0 and 255 *)
+
+  val pixel_PPM_default : PixelPPM.t
+  (**[pixel_PBM] make a PPM default pixel *)
 end
 
+module ImagePBM : Image.S with type pixel = bool
 
-type t
-(** Alias of image type *)
+module ImagePGM : Image.S with type pixel = int
 
-val make : int -> int -> Extension.t -> t
-(** Create image with:
-    - widht
-    - height
-    - extension
-*)
-
-val get_width: t -> int
-(** width of image *)
-
-val get_height: t -> int
-(** height of image *)
-
-val get_extension: t -> Extension.t
-(** extension of image *)
-
-val get_max_value: t -> int
-(** max value *)
-
-val get: t -> int -> int -> Pixel.t
-(** get pixel of one image with:
-    - image
-    - x
-    - y
- (raise Invalid argument if x or y out of bound)
-*)
-
-val set: t -> int -> int -> Pixel.t -> unit
-(** set pixel in one image with:
-    - image
-    - x
-    - y
- (raise Invalid argument if x or y out of bound)
-*)
-
-val to_string: t -> string
-(** convert image to string *)
-
-
+module ImagePPM : Image.S with type pixel = int * int * int

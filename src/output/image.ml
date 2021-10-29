@@ -26,6 +26,16 @@ module type S = sig
   val to_string : t -> string
 
   val write : t -> out_channel -> unit
+
+  module Buffered : sig
+    type b
+
+    val make : t -> b
+
+    val add_pixel : b -> pixel -> unit
+
+    val get_image : b -> t
+  end
 end
 
 module Make (Pix : Pixel) : S with type pixel = Pix.t = struct

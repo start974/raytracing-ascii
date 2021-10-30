@@ -1,16 +1,16 @@
 type t
 
 val make : int -> int -> float -> t
-(** [make] screen with [width], [height], [aspect_ratio]*)
+(** [make w h r] is the screen with width [w], height [h], and aspect_ratio [r].*)
 
 val width : t -> int
-(** [width] of screen*)
+(** [width s] is the width of screen [s] *)
 
 val height : t -> int
-(** [height] of screen*)
+(** [height s] is the height of screen [s] *)
 
 val max_width : t -> float
-(** [max width] of screen (with - 1)*)
+(** [max_width] of screen (with - 1)*)
 
 val max_height : t -> float
 (** [max height] of screen (height - 1)*)

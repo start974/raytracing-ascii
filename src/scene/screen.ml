@@ -1,17 +1,22 @@
+open Gg
 open Aux
 
-type t = {width: int; height: int; aspect_ratio: float}
+type t = {width: int; height: int; width_3d: float}
 
-let make width height aspect_ratio = {width; height; aspect_ratio}
+let make width height width_3d = {width; height; width_3d}
 
 let width {width; _} = width
 
 let height {height; _} = height
 
-let max_width {width; _} = Float.(of_int width - 1.)
+let width_3d {width_3d; _} = width_3d
 
-let max_height {height; _} = Float.(of_int height - 1.)
+let height_on_width {width; height; _} = Float.(of_int height / of_int width)
 
-let aspect_ratio {aspect_ratio; _} = aspect_ratio
+let height_3d screen = Float.(height_on_width screen * width_3d screen)
+
+let pixel_3d screen = Float.(width_3d screen / of_int (width screen))
 
 let size {width; height; _} = (width, height)
+
+let size_3d s = V2.v (width_3d s) (height_3d s)

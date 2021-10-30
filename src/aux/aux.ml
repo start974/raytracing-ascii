@@ -5,3 +5,4 @@ module Float = IFloat
 module V3 = V3
 module Array = Array
 module List = List
+module Int = Int

@@ -4,6 +4,8 @@ open Geometry
 
 type t = {position: p3; forward_vec: V3.t; screen: Screen.t}
 
+let up = V3.v 0. 1. 0. (*todo : make this a parameter *)
+
 let make position forward_vec screen = {position; forward_vec; screen}
 
 let position {position; _} = position
@@ -16,7 +18,7 @@ let plane camera = Plane.v (middle_screen camera) camera.forward_vec
 
 let screen_point camera =
   let plane = plane camera in
-  fun point -> Plane.apply plane point
+  fun point -> Plane.apply plane ~up point
 
 
 

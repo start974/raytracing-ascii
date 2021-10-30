@@ -18,3 +18,5 @@ let to_string v =
   let to_string_coord f = string_of_float @@ f v in
   to_string_coord x ^ ", " ^ to_string_coord y ^ ", " ^ to_string_coord z
 
+let is_colinear v1 v2 =
+  is_close (unit v1) (unit v2) || is_close (smul (-1.) (unit v1)) (unit v2)

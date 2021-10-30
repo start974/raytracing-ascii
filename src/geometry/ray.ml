@@ -26,9 +26,7 @@ let apply {origin; direction} lambda = V3.(origin + smul lambda direction)
 
 let mem {origin; direction} p =
   let direction' = V3.(p - origin) in
-  let proj = V3.dot direction direction' in
-  Float.is_close proj Float.(V3.norm direction * V3.norm direction')
-
+  V3.is_colinear direction direction'
 let distance_from_point = abstract_distance_from_point V3.norm
 
 let distance_from_point2 = abstract_distance_from_point V3.norm2

@@ -6,4 +6,4 @@
 
 (executable
  (name main)
- (libraries output scene aux geometry))
+ (libraries output scene aux geometry light))

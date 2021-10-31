@@ -1,4 +1,6 @@
+open Gg
 open Geometry
+open Light
 
 module Camera : module type of Camera
 
@@ -20,4 +22,4 @@ val objects : t -> Objects.t
 
 val ray : t -> int -> int -> Ray.t
 
-val get_color : t -> int -> int -> Objects.ObjectScene.color
+val get_color : t -> int -> int -> Color.t

@@ -3,7 +3,7 @@
 ### article
 https://medium.com/swlh/ray-tracing-from-scratch-in-python-41670e6a96f9
 https://www.scratchapixel.com/code.php?id=8&origin=/lessons/3d-basic-rendering/ray-tracing-overview
-
+https://github.com/wiatrak2/raytracer
 
 ```
 config {
@@ -48,19 +48,19 @@ for (each pixel)
     - [X] ppm
     - [X] ascii output
 - [ ] objects
-    - [ ] interface
-    - [ ] sphere
+    - [X] interface
+    - [X] sphere
     - [ ] mesh
 - [ ] Simple ray tracing (one bounce)
     - [ ] scene
         - [ ] file ?
-        - [ ] camera
-        - [ ] screen
-        - [ ] objects
-            - [ ] position
+        - [X] camera
+        - [X] screen
+        - [X] objects
+            - [X] position
             - [ ] material
         - [ ] light
-            - [ ] ambiant
+            - [X] ambiant
             - [ ] directional
             - [ ] point
     - [ ] illumination ambiant

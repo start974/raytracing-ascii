@@ -1,6 +1,7 @@
+open Gg
 module Camera = Camera
 module Screen = Screen
-module Lights = Lights
+module Lights = Light.Lights
 module Objects = Objects
 
 type t = {camera: Camera.t; lights: Lights.t; objects: Objects.t}
@@ -23,6 +24,8 @@ let get_color scene =
     let opt_obj = Objects.nearest_intersection objects (ray_trace x y) in
     match opt_obj with
     | None ->
-        Lights.AmbiantLight.get_color @@ Lights.get_ambiant lights
-    | Some (_p, obj) ->
-        Objects.ObjectScene.get_color obj
+        Lights.ambiant_color lights
+    | Some (_p, _obj) ->
+        V4.(1.50 * Lights.ambiant_color lights)
+(* TODO mutiply by coeff of difusion*)
+(*Objects.ObjectScene.get_color obj*)

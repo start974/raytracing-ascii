@@ -98,9 +98,6 @@ let reflexion sphere ray =
          let normal = V3.(intersection - center) in
          Ray.reflexion ray intersection normal )
 
-
-
-
 let%test "sphere intersection 1" =
   let sphere = v V3.zero 1. in
   let ray = Ray.v (V3.v (-2.) 0. 0.) (V3.v 1. 0. 0.) in

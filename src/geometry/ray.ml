@@ -11,22 +11,22 @@ let origin v = v.origin
 
 let direction v = v.direction
 
-let abstract_distance_from_point dist line point =
-  let {origin; direction} = line in
-  let line_vector = V3.unit direction in
-  let point_vector = V3.(point - origin) in
-  let distance_of_projection_from_origin = V3.dot line_vector point_vector in
-  let projection_vector =
-    V3.smul distance_of_projection_from_origin line_vector
-  in
-  let projection = V3.(projection_vector + origin) in
-  V3.(dist (projection - point))
-
 let apply {origin; direction} lambda = V3.(origin + smul lambda direction)
 
 let mem {origin; direction} p =
   let direction' = V3.(p - origin) in
   V3.is_colinear direction direction'
+
+let closest_mem ray point =
+  let {origin; direction} = ray in
+  let point_vector = V3.(point - origin) in
+  let distance_of_projection_from_origin = V3.dot direction point_vector in
+  apply ray distance_of_projection_from_origin
+
+let abstract_distance_from_point dist ray point =
+  let closest_point = closest_mem ray point in
+  V3.(dist (closest_point - point))
+
 let distance_from_point = abstract_distance_from_point V3.norm
 
 let distance_from_point2 = abstract_distance_from_point V3.norm2
@@ -57,6 +57,24 @@ let%test "reflexion 1" =
    let edirection = V3.v 0. 1. 0. in
    V3.pp Format.std_formatter direction ;
    origin = eorigin && V3.is_close direction edirection *)
+
+let%test "ray distance from point 1" =
+  let ray = v V3.zero (V3.v 1. 0. 0.) in
+  let point = V3.v 1. 0. 0. in
+  let dist = distance_from_point ray point in
+  Float.is_close dist 0.
+
+let%test "ray distance from point 2" =
+  let ray = v V3.zero (V3.v 1. 0. 0.) in
+  let point = V3.v 156. 0. 0. in
+  let dist = distance_from_point ray point in
+  Float.is_close dist 0.
+
+let%test "ray distance from point 3" =
+  let ray = v V3.zero (V3.v 1. 0. 0.) in
+  let point = V3.v 0. 1. 0. in
+  let dist = distance_from_point ray point in
+  Float.is_close dist 1.
 
 let%test "ray mem" =
   let ray1 = v V3.zero (V3.v 1. 2. 3.)

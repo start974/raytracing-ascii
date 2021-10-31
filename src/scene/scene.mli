@@ -1,26 +1,20 @@
 open Gg
 open Geometry
-open Light
 
 module Camera : module type of Camera
 
 module Screen : module type of Screen
 
-module Lights : module type of Lights
-
 module Objects : module type of Objects
+
 module Object : module type of Object
 
+module Light : module type of Light
 
 type t
 
-val make : Camera.t -> Lights.t -> Objects.t -> t
-
-val camera : t -> Camera.t
-
-val lights : t -> Lights.t
-
-val objects : t -> Objects.t
+val make : Camera.t -> color -> Light.t array -> Objects.t -> t
+(*[make: camera, ambiant light, lights, objects]*)
 
 val ray : t -> int -> int -> Ray.t
 

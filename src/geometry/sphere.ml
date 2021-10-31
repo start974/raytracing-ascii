@@ -107,3 +107,8 @@ let%test "sphere intersection 1" =
   | Some p ->
       let ep = V3.v (-1.) 0. 0. in
       V3.is_close ep p
+
+let%test "sphere intersection surface" =
+  let sphere = v V3.zero 1. in
+  let ray = Ray.v (V3.v (-1.) 0. 0.) (V3.v (-1.) 0. 0.) in
+  match intersection_with_ray sphere ray with None -> true | Some _ -> false

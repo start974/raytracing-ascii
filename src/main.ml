@@ -8,12 +8,14 @@ let minimal_scene () =
   let screen = Screen.make 700 700 1. in
   let camera = Camera.make P3.(v 0. 0. 0.) V3.(v 0. 0. 2.) screen
   and ambiant = Color.(v_srgb 0.4 0.4 0.4)
-  and lights = [|Light.make Color.(v_srgb 0.7 0.7 0.7) P3.(v 5. 5. 10.)|]
+  and lights =
+    [| Light.make V4.(500. * Color.(v_srgb 1. 1. 1.)) P3.(v (-15.) 0. 30.)
+     ; Light.make V4.(250. * Color.(v_srgb 1. 1. 1.)) P3.(v (-15.) 0. 20.) |]
   and objects =
     Object.
-      [| make (Sphere.v P3.(v 0. 0. 25.) 1.) Color.red
-       ; make (Sphere.v P3.(v 1. 1. 20.) 0.5) Color.blue
-       ; make (Sphere.v P3.(v 0. 12. 100.) 12.) Color.green |]
+      [| make (Sphere.v P3.(v 0. 0. 20.) 1.5) Color.(v_srgb 1. 0.5 0.5) 1.
+       ; make (Sphere.v P3.(v 3. 1. 19.) 1.) Color.(v_srgb 0.5 1. 0.5) 1.
+       ; make (Sphere.v P3.(v 0. 12. 50.) 12.) Color.(v_srgb 0.5 0.5 1.) 1. |]
   in
   Scene.make camera ambiant lights objects
 

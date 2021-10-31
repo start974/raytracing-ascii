@@ -1,16 +1,20 @@
 open Geometry
 open Aux
 
-type obj = Sphere.t
+type geometry = Sphere.t
 
-type t = {obj: obj; absorbtion: Color.t}
+type t = {geometry: geometry; absorbtion: Color.t; reflexivity: float}
 
-let make obj absorbtion = {obj; absorbtion}
+let make geometry absorbtion reflexivity = {geometry; absorbtion; reflexivity}
 
 let absorbtion {absorbtion; _} = absorbtion
 
-let shift_point ?(eps = 0.00001) {obj; _} p =
-  let normal = V3.(unit (p - Sphere.center obj)) in
+let reflexivity {reflexivity; _} = reflexivity
+
+let shift_point ?(eps = 0.00001) {geometry; _} p =
+  let normal = V3.(unit (p - Sphere.center geometry)) in
   V3.(p + (eps * normal))
 
-let intersection {obj; _} ray = Sphere.intersection_with_ray obj ray
+let intersection {geometry; _} ray = Sphere.intersection_with_ray geometry ray
+
+let reflexion obj ray = Option.get @@ Sphere.reflexion obj.geometry ray

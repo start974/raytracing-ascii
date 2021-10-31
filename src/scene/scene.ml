@@ -3,6 +3,7 @@ module Camera = Camera
 module Screen = Screen
 module Lights = Light.Lights
 module Objects = Objects
+module Object = Object
 
 type t = {camera: Camera.t; lights: Lights.t; objects: Objects.t}
 
@@ -25,7 +26,5 @@ let get_color scene =
     match opt_obj with
     | None ->
         Lights.ambiant_color lights
-    | Some (_p, _obj) ->
-        V4.(1.50 * Lights.ambiant_color lights)
-(* TODO mutiply by coeff of difusion*)
-(*Objects.ObjectScene.get_color obj*)
+    | Some (_p, obj) ->
+        V4.(mul (Object.absorbtion obj) (Lights.ambiant_color lights))

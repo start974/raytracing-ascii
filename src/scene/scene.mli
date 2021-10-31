@@ -9,6 +9,8 @@ module Screen : module type of Screen
 module Lights : module type of Lights
 
 module Objects : module type of Objects
+module Object : module type of Object
+
 
 type t
 

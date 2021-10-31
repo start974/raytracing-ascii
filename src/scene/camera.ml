@@ -20,8 +20,6 @@ let screen_point camera =
   let plane = plane camera in
   fun point -> Plane.apply plane ~up point
 
-
-
 let screen_point camera =
   let screen_point = screen_point camera
   and pixel_size = Screen.pixel_3d camera.screen

@@ -2,12 +2,12 @@ open Gg
 
 type t
 
-val make : Color.t -> Color.t -> P3.t -> t
-(** [make, diffuse, specular, position] *)
+val make : Color.t -> Color.t -> float -> P3.t -> t
+(** [make, diffuse, specular, position, shiness] *)
 
 val position : t -> P3.t
 
-val diffuse : t -> Color.t
+val shiness : t -> float
 
 val distance : t -> P3.t -> float
 (*[distance] distance between point and light*)

@@ -7,14 +7,14 @@ open Scene
 let minimal_scene () =
   let screen = Screen.make 700 700 1. in
   let camera = Camera.make P3.(v 0. 0. 0.) V3.(v 0. 0. 2.) screen
-  and ambiant = Color.(v_srgb 0.4 0.4 0.4)
+  and ambiant = Color.(v_srgb 0.3 0.3 0.3)
   and lights =
-    [| Light.make Color.white Color.white P3.(v 2. 2. 18.)
-     ; Light.make Color.white Color.white P3.(v (-2.) (-2.) (-10.)) |]
+    [| Light.make Color.white Color.white 100. P3.(v 2. 2. 18.)
+     ; Light.make Color.white Color.white 100. P3.(v (-3.) (-3.) (-10.)) |]
   and objects =
     Object.
       [| make
-           (Sphere.v P3.(v 0. 0. 25.) 1.)
+           (Sphere.v P3.(v (-1.) 0. 25.) 1.)
            {ka= Color.white; kd= Color.v_srgb 0.9 0. 0.; ks= Color.white}
        ; make
            (Sphere.v P3.(v 1. 1. 20.) 0.5)

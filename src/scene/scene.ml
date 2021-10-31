@@ -36,5 +36,6 @@ let get_color scene =
     | None ->
         ambiant
     | Some (p, obj) ->
-        let illumination_color = illumination scene p in
+        let p' = Object.shift_point obj p in
+        let illumination_color = illumination scene p' in
         V4.(mul (Object.absorbtion obj) illumination_color)

@@ -18,3 +18,5 @@ let to_string v =
 
 let is_colinear v1 v2 =
   is_close (unit v1) (unit v2) || is_close (smul (-1.) (unit v1)) (unit v2)
+
+let one = V3.v 1. 1. 1.

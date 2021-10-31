@@ -1,12 +1,15 @@
 open Geometry
 open Gg
- type obj = Sphere.t
 
- type t
+type obj = Sphere.t
 
- val make : obj -> Color.t -> t
- (*[make] and object with associate color absobtion *)
+type t
 
- val absorbtion : t -> Color.t
+val make : obj -> Color.t -> t
+(*[make] and object with associate color absobtion *)
 
- val intersection: t -> Ray.t -> P3.t option
+val absorbtion : t -> Color.t
+
+val intersection : t -> Ray.t -> P3.t option
+
+val shift_point : ?eps:float -> t -> P3.t -> P3.t

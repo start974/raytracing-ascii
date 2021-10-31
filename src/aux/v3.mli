@@ -9,3 +9,5 @@ val to_triple_int : t -> int * int * int
 val to_string : t -> string
 
 val is_colinear : t -> t -> bool
+
+val one : t

@@ -1,6 +1,5 @@
 open Gg
 open Aux
-open Geometry
 module Camera = Camera
 module Screen = Screen
 module Objects = Objects
@@ -8,34 +7,35 @@ module Object = Object
 module Light = Light
 
 type t =
-  {camera: Camera.t; ambiant: Color.t; lights: Light.t array; objects: Objects.t}
+  {camera: Camera.t; ambient: Color.t; lights: Light.t array; objects: Objects.t}
 
-let make camera ambiant lights objects = {camera; ambiant; lights; objects}
+let make camera ambient lights objects = {camera; ambient; lights; objects}
 
 let ray scene =
   let ray = Camera.ray scene.camera in
   fun x y -> ray x y
 
-let illumination {ambiant; lights; objects; _} p =
-  let illuminate light =
-    not
-    @@ Array.exists
-         (fun obj ->
-           let ray = Ray.v p V3.(Light.position light - p) in
-           Option.is_some @@ Object.intersection obj ray )
-         objects
+let illumination {ambient; lights; objects; _} obj p ray =
+  let ka = (Object.material obj).ka
+  and kd = (Object.material obj).kd
+  and ns = Object.normal_surface obj p
+  and lights = Illumination.lights_contribute lights objects p in
+  let color_a = Illumination.ambient ambient ka in
+  let color_d =
+    Array.map
+      (fun l ->
+        let id = Light.intensity_diffuse l p in
+        Illumination.diffuse kd id ns ray )
+      lights
   in
-  lights |> Array.filter illuminate |> Array.map Light.color
-  |> Array.fold_left V4.add ambiant
+  color_d |> Array.fold_left V4.add color_a
 
 let get_color scene =
-  let {ambiant; objects; _} = scene and ray_trace = ray scene in
+  let {ambient; objects; _} = scene and ray_trace = ray scene in
   fun x y ->
-    let opt_obj = Objects.nearest_intersection objects (ray_trace x y) in
-    match opt_obj with
+    let ray = ray_trace x y in
+    match Objects.nearest_intersection objects ray with
     | None ->
-        ambiant
+        ambient
     | Some (p, obj) ->
-        let p' = Object.shift_point obj p in
-        let illumination_color = illumination scene p' in
-        V4.(mul (Object.absorbtion obj) illumination_color)
+        illumination scene obj p ray

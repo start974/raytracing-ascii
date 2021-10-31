@@ -74,7 +74,7 @@ for (each pixel)
             - [ ] rotation
             - [ ] scale
     - [ ] illumination specular
-    - [ ] illumination difuse
+    - [ ] illumination diffuse
     - [ ] illumination reflexion
         - [ ] transparency
     - [ ] smooth mesh

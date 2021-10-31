@@ -2,7 +2,7 @@ open Gg
 open Aux
 open Geometry
 
-let ambient ambiant_color ka = V4.mul ka ambiant_color
+let ambient ka ia = V4.mul ka ia
 
 let lights_contribute lights objects p =
   let illuminate light =

@@ -1,9 +1,7 @@
 open Gg
 
-type t
-
-val make : Color.t -> Color.t -> float -> P3.t -> t
 (** [make, diffuse, specular, position, shiness] *)
+type t = {position: P3.t; diffuse: Color.t; specular: Color.t; shiness: float}
 
 val position : t -> P3.t
 

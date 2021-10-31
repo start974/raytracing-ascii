@@ -8,41 +8,42 @@ module Object = Object
 module Light = Light
 
 type t =
-  {camera: Camera.t; ambient: Color.t; lights: Light.t array; objects: Objects.t}
+  {camera: Camera.t; ambiant: Color.t; lights: Light.t array; objects: Objects.t}
 
-let make camera ambient lights objects = {camera; ambient; lights; objects}
+let make camera ambiant lights objects = {camera; ambiant; lights; objects}
 
 let ray scene =
   let ray = Camera.ray scene.camera in
   fun x y -> ray x y
 
-let illumination {ambient; lights; objects; _} obj p ray =
-  let ka = (Object.material obj).ka
-  and ns = Object.normal_surface obj p
-  and ray_dir = Ray.direction ray in
-  let color_a = Illumination.ambient ambient ka
+let illumination {lights; objects; ambiant; _} obj p ray =
+  let ns = Object.normal_surface obj p and ray_dir = Ray.direction ray in
+  let color_a =
+    let ka = (Object.material obj).ka in
+    Illumination.ambient ka ambiant
   and f_color_d light =
     let kd = (Object.material obj).kd
     and id = Light.intensity_diffuse light p in
-    Illumination.diffuse kd id ns ray_dir
+    Illumination.diffuse kd id ns ray_dir ;
+    Color.white
   and f_color_s light =
     let ks = (Object.material obj).ks
     and is = Light.intensity_specular light p
     and shiness = Light.shiness light
     and dir_light = V3.(Light.position light - p) in
-    Illumination.specular ks is shiness ns ray_dir dir_light
+    Illumination.specular ks is shiness ns ray_dir dir_light ;
+    Color.white
+  in
+  let f_color light = V4.(f_color_d light + f_color_s light)
   and lights = Illumination.lights_contribute lights objects p in
-  lights
-  |> Array.fold_left
-       (fun acc light -> V4.(acc + f_color_d light + f_color_s light))
-       color_a
+  lights |> Array.map f_color |> Array.fold_left V4.add color_a
 
 let get_color scene =
-  let {ambient; objects; _} = scene and ray_trace = ray scene in
+  let {objects; ambiant; _} = scene and ray_trace = ray scene in
   fun x y ->
     let ray = ray_trace x y in
     match Objects.nearest_intersection objects ray with
     | None ->
-        ambient
+        ambiant
     | Some (p, obj) ->
         illumination scene obj p ray

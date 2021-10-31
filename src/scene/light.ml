@@ -1,10 +1,7 @@
 open Gg
 open Aux
 
-type t = {diffuse: Color.t; specular: Color.t; shiness: float; position: P3.t}
-
-let make diffuse specular shiness position =
-  {diffuse; specular; position; shiness}
+type t = {position: P3.t; diffuse: Color.t; specular: Color.t; shiness: float}
 
 let position {position; _} = position
 

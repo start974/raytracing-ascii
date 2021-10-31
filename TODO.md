@@ -5,45 +5,6 @@ https://medium.com/swlh/ray-tracing-from-scratch-in-python-41670e6a96f9
 https://www.scratchapixel.com/code.php?id=8&origin=/lessons/3d-basic-rendering/ray-tracing-overview
 https://github.com/wiatrak2/raytracer
 
-```
-config {
-    max_depth = ...
-    camera = ...
-    background = ...
-    objects = ...
-}
-
-let intersect_nearest objects ray = ...
-
-
-let rec send_ray ray objects max_depth = 
-    let object = intersect_nearest objects ray in
-    match object with
-    | None => black
-    | Some object =>
-        if is_shadow then
-            black
-        else
-            (* ilumination ambiant *)
-            ...
-    
-            (* ilumination diffuse *)
-            ...
-
-            (* ilumination specular *)
-            ...
-
-            (* ilumination reflexion *)
-            ...
-
-let get_color camera pi
-
-
-for (each pixel)
-    ray = ...
-    pixel = get_color ray objects
-}
-```
 - [ ] output
     - [X] ppm
     - [X] ascii output
@@ -58,13 +19,13 @@ for (each pixel)
         - [X] screen
         - [X] objects
             - [X] position
-            - [ ] material
+            - [X] material
         - [ ] light
             - [X] ambiant
             - [ ] directional
-            - [ ] point
-    - [ ] illumination ambiant
-    - [ ] shadow
+            - [X] point
+    - [X] illumination ambiant
+    - [X] shadow
 
 - [ ] Advanced
     - [ ] scene
@@ -73,8 +34,8 @@ for (each pixel)
         - [ ] objects
             - [ ] rotation
             - [ ] scale
-    - [ ] illumination specular
-    - [ ] illumination diffuse
+    - [X] illumination specular
+    - [X] illumination diffuse
     - [ ] illumination reflexion
         - [ ] transparency
     - [ ] smooth mesh

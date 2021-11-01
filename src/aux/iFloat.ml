@@ -17,6 +17,8 @@ let to_deg rad = rad * 180. / pi
 
 let is_close ?(eps = 0.00001) x y = is_zero ~eps (x - y)
 
+let square x = x *. x
+
 let%test "is close 1" = is_close 1. 1.
 
 let%test "is close 2" = is_close 1. 1.000001

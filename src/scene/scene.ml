@@ -41,7 +41,7 @@ let illumination {lights; objects; ambiant; _} obj p ray =
   and lights = Illumination.lights_contribute lights objects p in
   lights |> Array.map f_color |> Array.fold_left V4.add color_a
 
-let rec get_color_of_ray ?(max_iteration = 100) scene ray =
+let rec get_color_of_ray ?(max_iteration = 10) scene ray =
   let {objects; ambiant; _} = scene in
   if max_iteration = 0 then ambiant
   else
@@ -50,17 +50,25 @@ let rec get_color_of_ray ?(max_iteration = 100) scene ray =
     | None ->
         ambiant
     | Some (p, obj) ->
-        let p' = Object.shift_point obj p in
-        let illumination_color = illumination scene obj p' ray in
-        let reflexivity = (Object.material obj).reflexivity in
-        let incoming =
-          if Float.is_close reflexivity 0. then V4.zero
+        let p' = Object.shift_point obj p
+        and k_refl = (Object.material obj).reflexivity
+        and opacity = (Object.material obj).opacity
+        and max_iteration = max_iteration - 1 in
+        let illumination_color = V4.(opacity * illumination scene obj p' ray) in
+        let reflexive_color =
+          if Float.is_close k_refl 0. then V4.zero
           else
-            let max_iteration = max_iteration - 1 in
             let reflexion = Object.reflexion obj ray in
-            get_color_of_ray ~max_iteration scene reflexion
+            V4.(k_refl * get_color_of_ray ~max_iteration scene reflexion)
         in
-        V4.(illumination_color + incoming)
+        let refraction_color =
+          if Float.is_close k_refl 1. then V4.zero
+          else
+            let refraction = Object.refraction obj 1. ray
+            and k = Float.((1. - k_refl) * (1. - opacity)) in
+            V4.(k * get_color_of_ray ~max_iteration scene refraction)
+        in
+        V4.(illumination_color + reflexive_color + refraction_color)
 
 let get_color scene =
   let ray_trace = ray scene and get_color_of_ray = get_color_of_ray scene in

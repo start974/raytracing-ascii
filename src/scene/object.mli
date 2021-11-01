@@ -3,7 +3,13 @@ open Gg
 
 type geometry = Sphere.t
 
-type material = {ka: Color.t; kd: Color.t; ks: Color.t; reflexivity: float}
+type material =
+  { ka: Color.t
+  ; kd: Color.t
+  ; ks: Color.t
+  ; reflexivity: float
+  ; refraction_index: float
+  ; opacity: float }
 
 type t
 
@@ -13,6 +19,9 @@ val make : geometry -> material -> t
 val material : t -> material
 
 val reflexion : t -> Ray.t -> Ray.t
+
+val refraction : ?eps:float -> t -> float -> Ray.t -> Ray.t
+(* [refraction] with [object, relexion env 1 (n1), ray]*)
 
 val intersection : t -> Ray.t -> P3.t option
 (**[intersection] between ray and point *)

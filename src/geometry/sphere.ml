@@ -1,8 +1,6 @@
 open Gg
 open Aux
 
-let square x = x *. x
-
 type t = {center: v3; radius: float}
 
 let center v = v.center

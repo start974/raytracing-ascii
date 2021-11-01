@@ -10,7 +10,7 @@ let lights_contribute lights objects p =
     @@ Array.exists
          (fun obj ->
            let ray = Ray.v p V3.(Light.position light - p) in
-           Option.is_some @@ Object.intersection obj ray )
+           Object.intersection obj ray |> Option.is_some )
          objects
   in
   Array.filter illuminate lights

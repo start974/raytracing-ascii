@@ -17,3 +17,5 @@ val is_close : ?eps:t -> t -> t -> bool
 val to_deg : t -> t
 
 val to_rad : t -> t
+
+val square : t -> t

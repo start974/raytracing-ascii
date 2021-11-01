@@ -3,16 +3,14 @@ open Gg
 
 type geometry = Sphere.t
 
-type material = {ka: Color.t; kd: Color.t; ks: Color.t}
+type material = {ka: Color.t; kd: Color.t; ks: Color.t; reflexivity: float}
 
 type t
 
-val make : obj -> material -> t
+val make : geometry -> material -> t
 (*[make, object, diffuse, specular] and object with associate color absobtion *)
 
 val material : t -> material
-
-val reflexivity : t -> float
 
 val reflexion : t -> Ray.t -> Ray.t
 

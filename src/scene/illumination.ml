@@ -9,8 +9,7 @@ let lights_contribute lights objects p =
     not
     @@ Array.exists
          (fun obj ->
-           let p' = Object.shift_point obj p in
-           let ray = Ray.v p' V3.(Light.position light - p') in
+           let ray = Ray.v p V3.(Light.position light - p) in
            Option.is_some @@ Object.intersection obj ray )
          objects
   in

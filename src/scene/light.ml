@@ -13,7 +13,7 @@ let distance point_light point = Float.(sqrt @@ distance2 point_light point)
 
 let intensity light color p =
   let _k = Float.(1. / distance2 light p) in
-  (*V4.(1. * color)*)
+  (*V4.(_k * color)*)
   color
 
 let intensity_diffuse light p = intensity light light.diffuse p

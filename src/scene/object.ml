@@ -13,7 +13,7 @@ let material {material; _} = material
 
 let normal_surface {obj; _} p = V3.(unit (p - Sphere.center obj))
 
-let shift_point ?(eps = 0.00001) object_scene p =
+let shift_point ?(eps = 0.0001) object_scene p =
   V3.(p + (eps * normal_surface object_scene p))
 
 let intersection {obj; _} ray = Sphere.intersection_with_ray obj ray

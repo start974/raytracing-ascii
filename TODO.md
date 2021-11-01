@@ -36,7 +36,7 @@ https://github.com/wiatrak2/raytracer
             - [ ] scale
     - [X] illumination specular
     - [X] illumination diffuse
-    - [ ] illumination reflexion
+    - [X] illumination reflexion
         - [ ] transparency
     - [ ] smooth mesh
 - [ ] Optimisation

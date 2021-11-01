@@ -1,16 +1,18 @@
 open Geometry
 open Gg
 
-type obj = Sphere.t
+type geometry = Sphere.t
 
-type material = {ka: Color.t; kd: Color.t; ks: Color.t}
+type material = {ka: Color.t; kd: Color.t; ks: Color.t; reflexivity: float}
 
 type t
 
-val make : obj -> material -> t
+val make : geometry -> material -> t
 (*[make, object, diffuse, specular] and object with associate color absobtion *)
 
 val material : t -> material
+
+val reflexion : t -> Ray.t -> Ray.t
 
 val intersection : t -> Ray.t -> P3.t option
 (**[intersection] between ray and point *)

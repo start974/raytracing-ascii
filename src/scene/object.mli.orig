@@ -7,8 +7,14 @@ type material = {ka: Color.t; kd: Color.t; ks: Color.t}
 
 type t
 
+<<<<<<< HEAD
+val make : geometry -> Color.t -> float -> t
+(** [make g a r] is the object with geometry [g], absorbtion [a] and reflexivity
+    [r]. *)
+=======
 val make : obj -> material -> t
 (*[make, object, diffuse, specular] and object with associate color absobtion *)
+>>>>>>> main
 
 val material : t -> material
 

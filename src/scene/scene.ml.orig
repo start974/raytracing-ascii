@@ -32,14 +32,10 @@ let illumination {lights; objects; ambiant; _} obj p ray =
     and dir_light = V3.(Light.position light - p) in
     Illumination.specular ks is shiness ns ray_dir dir_light
   in
-  let f_color light = V4.(f_color_d light + f_color_s light)
-  and lights = Illumination.lights_contribute lights objects p in
-  lights |> Array.map f_color |> Array.fold_left V4.add color_a
-  (** TODO change to intesity V4.(Light.color light / Light.distance2 light p)
+<<<<<<< HEAD
   lights |> Array.filter illuminate
   |> Array.map (fun light -> V4.(Light.color light / Light.distance2 light p))
   |> Array.fold_left V4.add ambiant
-  *)
 
 let rec get_color_of_ray ?(max_iteration = 10) scene ray =
   let {objects; ambiant; _} = scene in
@@ -65,3 +61,18 @@ let rec get_color_of_ray ?(max_iteration = 10) scene ray =
 let get_color scene =
   let ray_trace = ray scene and get_color_of_ray = get_color_of_ray scene in
   fun x y -> get_color_of_ray (ray_trace x y)
+=======
+  let f_color light = V4.(f_color_d light + f_color_s light)
+  and lights = Illumination.lights_contribute lights objects p in
+  lights |> Array.map f_color |> Array.fold_left V4.add color_a
+
+let get_color scene =
+  let {objects; ambiant; _} = scene and ray_trace = ray scene in
+  fun x y ->
+    let ray = ray_trace x y in
+    match Objects.nearest_intersection objects ray with
+    | None ->
+        ambiant
+    | Some (p, obj) ->
+        illumination scene obj p ray
+>>>>>>> main

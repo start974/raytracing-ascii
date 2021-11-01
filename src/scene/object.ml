@@ -3,17 +3,17 @@ open Aux
 
 type geometry = Sphere.t
 
-type t = {geometry: geometry; absorbtion: Color.t; reflexivity: float}
 
-let make geometry absorbtion reflexivity = {geometry; absorbtion; reflexivity}
+type t = {geometry: geometry; material: material}
 
-let absorbtion {absorbtion; _} = absorbtion
+let make obj material = {obj; material}
 
-let reflexivity {reflexivity; _} = reflexivity
+let material {material; _} = material
 
-let shift_point ?(eps = 0.00001) {geometry; _} p =
-  let normal = V3.(unit (p - Sphere.center geometry)) in
-  V3.(p + (eps * normal))
+let normal_surface {obj; _} p = V3.(unit (p - Sphere.center obj))
+
+let shift_point ?(eps = 0.00001) object_scene p =
+  V3.(p + (eps * normal_surface object_scene p))
 
 let intersection {geometry; _} ray = Sphere.intersection_with_ray geometry ray
 

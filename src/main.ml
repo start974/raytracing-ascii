@@ -31,7 +31,7 @@ let minimal_scene width height =
            (Sphere.v P3.(v 0. 0. 10.) 0.5)
            { ka= Color.black
            ; kd= Color.white
-           ; ks= Color.black
+           ; ks= V4.(0.5 * Color.white)
            ; reflexivity= 0.
            ; refraction_index= 1.5
            ; opacity= 0.00 }
@@ -40,9 +40,9 @@ let minimal_scene width height =
            { ka= Color.v_srgb 0.9 0.8 0.
            ; kd= Color.v_srgb 0.9 0.8 0.
            ; ks= V4.(0.5 * Color.white)
-           ; reflexivity= 1.
+           ; reflexivity= 0.8
            ; refraction_index= 0.
-           ; opacity= 1. }
+           ; opacity= 0.8 }
        ; make (* sphere verte *)
            (Sphere.v P3.(v 3. (-3.) 25.) 1.)
            { ka= Color.v_srgb 0. 0.9 0.

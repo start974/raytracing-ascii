@@ -89,12 +89,7 @@ let intersection_with_ray sphere ray =
     else None
   else None
 
-let reflexion sphere ray =
-  intersection_with_ray sphere ray
-  |> Option.map (fun intersection ->
-         let center = center sphere in
-         let normal = V3.(intersection - center) in
-         Ray.reflexion ray intersection normal )
+let normal {center; _} p = V3.(unit (p - center))
 
 let%test "sphere intersection 1" =
   let sphere = v V3.zero 1. in

@@ -31,14 +31,10 @@ let distance_from_point = abstract_distance_from_point V3.norm
 
 let distance_from_point2 = abstract_distance_from_point V3.norm2
 
-let reflexion ray intersection normal =
-  let direction = direction ray in
-  v intersection
-    V3.(direction - smul Float.(2. * V3.dot direction normal) normal)
-
 let to_string {origin; direction} =
   "origin: " ^ V3.to_string origin ^ " | dir: " ^ V3.to_string direction
 
+(*
 let%test "reflexion 1" =
   let ray = v (V3.v 0. 0. 0.) (V3.v 1. 0. 0.) in
   let intersection = V3.v 2. 0. 0. in
@@ -47,7 +43,7 @@ let%test "reflexion 1" =
   let eorigin = intersection in
   let edirection = V3.v (-1.) 0. 0. in
   origin = eorigin && V3.is_close direction edirection
-
+*)
 (* let%test "reflexion 2" =
    let ray = v (V3.v 0. 0. 0.) (V3.v 1. 0. 0.) in
    let intersection = V3.v 2. 0. 0. in

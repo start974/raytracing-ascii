@@ -14,4 +14,5 @@ val intersection_with_ray : t -> Ray.t -> v3 option
     of sphere [s] with the ray [r]. If there is none, returns [None].
     The origin of [r] needs to be outside of the sphere. *)
 
-val reflexion : t -> Ray.t -> Ray.t option
+val normal : t -> P3.t -> V3.t
+(**[normal] of sphere at point [p]*)

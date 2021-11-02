@@ -18,7 +18,7 @@ val make : geometry -> material -> t
 
 val material : t -> material
 
-val reflexion : t -> Ray.t -> Ray.t
+val reflexion : ?eps:float -> t -> Ray.t -> Ray.t
 
 val refraction : ?eps:float -> t -> float -> Ray.t -> Ray.t
 (* [refraction] with [object, relexion env 1 (n1), ray]*)

@@ -17,15 +17,21 @@ let make geometry material = {geometry; material}
 
 let material {material; _} = material
 
-let normal_surface {geometry; _} p = V3.(unit (p - Sphere.center geometry))
+let normal_surface {geometry; _} p = Sphere.normal geometry p
 
-let shift_point ?(eps = 0.00001) object_scene p =
+let shift_point ?(eps = 0.0001) object_scene p =
   let normal = normal_surface object_scene p in
   V3.(p + (eps * normal))
 
 let intersection {geometry; _} ray = Sphere.intersection_with_ray geometry ray
 
-let reflexion obj ray = Option.get @@ Sphere.reflexion obj.geometry ray
+let reflexion ?(eps = 0.0001) obj ray =
+  let p = Option.get @@ intersection obj ray and dir_ray = Ray.direction ray in
+  let normal = normal_surface obj p in
+  let cos_theta = V3.dot dir_ray normal in
+  let dir = V3.(dir_ray - (Float.(2. * cos_theta) * normal)) in
+  let p' = V3.(p + (eps * unit dir)) in
+  Ray.v p' dir
 
 (** 
   formula used

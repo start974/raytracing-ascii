@@ -62,7 +62,7 @@ let rec get_color_of_ray ?(max_iteration = 10) scene ray =
             V4.(k_refl * get_color_of_ray ~max_iteration scene reflexion)
         in
         let refraction_color =
-          if Float.is_close k_refl 1. then V4.zero
+          if Float.(is_close k_refl 1. || is_close opacity 1.) then V4.zero
           else
             let refraction = Object.refraction obj 1. ray
             and k = Float.((1. - k_refl) * (1. - opacity)) in

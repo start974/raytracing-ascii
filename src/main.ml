@@ -19,23 +19,31 @@ let minimal_scene width height =
        ; shiness= 100. } |]
   and objects =
     Object.
-      [| make
+      [| make (*sphere bleu arriere plan *)
            (Sphere.v P3.(v 0. 0. 50.) 12.)
            { ka= Color.v_srgb 0. 0.9 0.9
            ; kd= Color.v_srgb 0. 0.7 0.7
-           ; ks= Color.black
+           ; ks= V4.(0.1 * Color.white)
            ; reflexivity= 1.
            ; refraction_index= 1.
            ; opacity= 1. }
-       ; make
-           (Sphere.v P3.(v 0. 0. 5.) 0.5)
+       ; make (* sphere transparente *)
+           (Sphere.v P3.(v 0. 0. 10.) 0.5)
            { ka= Color.black
            ; kd= Color.white
            ; ks= Color.black
-           ; reflexivity= 0.01
+           ; reflexivity= 0.
            ; refraction_index= 1.5
            ; opacity= 0.00 }
-       ; make
+       ; make (* sphere jaune avec moin de spécular*)
+           (Sphere.v P3.(v 3. 3. 25.) 1.)
+           { ka= Color.v_srgb 0.9 0.8 0.
+           ; kd= Color.v_srgb 0.9 0.8 0.
+           ; ks= V4.(0.5 * Color.white)
+           ; reflexivity= 1.
+           ; refraction_index= 0.
+           ; opacity= 1. }
+       ; make (* sphere verte *)
            (Sphere.v P3.(v 3. (-3.) 25.) 1.)
            { ka= Color.v_srgb 0. 0.9 0.
            ; kd= Color.v_srgb 0. 0.7 0.
@@ -43,7 +51,7 @@ let minimal_scene width height =
            ; reflexivity= 1.
            ; refraction_index= 0.
            ; opacity= 1. }
-       ; make
+       ; make (* sphere bleu *)
            (Sphere.v P3.(v (-3.) 3. 25.) 1.)
            { ka= Color.v_srgb 0.0 0.8 0.5
            ; kd= Color.v_srgb 0.1 0.4 0.9
@@ -51,7 +59,7 @@ let minimal_scene width height =
            ; reflexivity= 1.
            ; refraction_index= 0.
            ; opacity= 1. }
-       ; make
+       ; make (* shere rouge *)
            (Sphere.v P3.(v (-3.) (-3.) 25.) 1.)
            { ka= Color.v_srgb 0.9 0. 0.
            ; kd= Color.v_srgb 0.7 0. 0.

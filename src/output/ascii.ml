@@ -15,19 +15,20 @@ end
 module PixelMaker = struct
   module Pixel = Pixel
 
-  type t = Pixel.t Array.t
+  type t = string
 
   let make char_list =
-    if List.length char_list == 0 then raise (Invalid_argument "array empty")
-    else Array.of_list char_list
+    if String.length char_list == 0 then raise (Invalid_argument "array empty")
+    else char_list
 
-  let default_pixel pix_maker = pix_maker.(0)
+  let default_pixel pix_maker = pix_maker.[0]
 
   let check_intensity intensity =
     if intensity < 0. || intensity > 1. then
-      raise (Invalid_argument "intnsity of not between 0 and 1")
+      raise (Invalid_argument "intensity of not between 0 and 1")
 
-  let length_last_index arr = float_of_int @@ (Array.length arr - 1)
+  let length_last_index pixel_maker =
+    float_of_int @@ (String.length pixel_maker - 1)
 
   let create_pixel pix_maker intensity =
     check_intensity intensity ;
@@ -35,7 +36,7 @@ module PixelMaker = struct
       Float.round @@ (length_last_index pix_maker *. intensity)
     in
     let index = int_of_float float_index in
-    pix_maker.(index)
+    pix_maker.[index]
 end
 
 module Image = Image.Make (PixelMaker.Pixel)

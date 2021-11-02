@@ -4,10 +4,10 @@ open Gg
 open Aux
 open Scene
 
-let minimal_scene () =
-  let screen = Screen.make 700 700 1. in
+let minimal_scene width height =
+  let screen = Screen.make width height 1. in
   let camera = Camera.make P3.(v 0. 0. 0.) V3.(v 0. 0. 2.) screen
-  and ambiant = Color.(v_srgb 0.4 0.4 0.4)
+  and ambiant = Color.(v_srgb 0.2 0.2 0.2)
   and lights : Light.t array =
     [| { position= P3.v 5. 5. 0.
        ; diffuse= V4.(500. * Color.white)
@@ -62,9 +62,9 @@ let minimal_scene () =
   in
   Scene.make camera ambiant lights objects
 
-let () =
-  let scene = minimal_scene () in
+let image_ppm () =
   let width, height = (700, 700) in
+  let scene = minimal_scene width height in
   let image =
     Image_PPM.init width height (fun y x ->
         let color_scene = Scene.get_color scene x y in
@@ -72,3 +72,32 @@ let () =
   in
   let file = open_out "test.ppm" in
   Image_PPM.write image file ; close_out file
+
+let image_pgm () =
+  let width, height = (700, 700) in
+  let scene = minimal_scene width height in
+  let image =
+    Image_PGM.init width height (fun y x ->
+        let color_scene = Scene.get_color scene x y in
+        let gray = Color.to_gray color_scene in
+        Float.(to_int (gray * 15.)) )
+  in
+  let file = open_out "test.pgm" in
+  Image_PGM.write image file ; close_out file
+
+let image_ascii () =
+  let width, height = (200, 200) in
+  let scene = minimal_scene width height in
+  let chars =
+    "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+  in
+  let pixel_maker = MkPixel_ascii.make chars in
+  let image =
+    Image_ascii.init width height (fun y x ->
+        let color_scene = Scene.get_color scene x y in
+        let gray = Color.to_gray color_scene in
+        MkPixel_ascii.create_pixel pixel_maker gray )
+  in
+  Image_ascii.write image stdout
+
+let () = image_ascii ()

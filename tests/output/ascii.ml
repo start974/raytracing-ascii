@@ -7,11 +7,11 @@ end
 
 let test_pixelMaker_default () =
   To_test.PixelMaker.(
-    let pixel_maker = make ['.'; '-'; '_'] in
+    let pixel_maker = make ".-_" in
     Alcotest.(check char) "default pixel" '.' (default_pixel pixel_maker))
 
 let test_pixelMaker_value () =
-  let make_pixel = To_test.PixelMaker.(create_pixel @@ make ['.'; '-'; '_']) in
+  let make_pixel = To_test.PixelMaker.(create_pixel @@ make ".-_") in
   let test_index x c =
     Alcotest.(check char) ("pixel " ^ string_of_float x) c (make_pixel x)
   in
@@ -23,7 +23,7 @@ let test_pixelMaker_value () =
 let test_image () =
   let output_string = "..\n..\n.0\n" in
   To_test.Image.(
-    let make_pixel = To_test.PixelMaker.(create_pixel @@ make ['.'; '0']) in
+    let make_pixel = To_test.PixelMaker.(create_pixel @@ make ".0") in
     let image = make 2 3 @@ make_pixel 0. in
     Alcotest.(check char) "pixel is default" '.' (get image 1 2) ;
     set image 1 2 @@ make_pixel 1. ;

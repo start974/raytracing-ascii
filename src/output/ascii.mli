@@ -3,7 +3,7 @@ module PixelMaker : sig
 
   type t
 
-  val make : char List.t -> t
+  val make : String.t -> t
   (** [make] a pixel maker ascii 
     (raise [Invalid_argument] if array empty) *)
 

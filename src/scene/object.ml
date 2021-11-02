@@ -35,16 +35,15 @@ let reflexion obj ray = Option.get @@ Sphere.reflexion obj.geometry ray
   n: normal
   C: - n . i
 *)
-let refraction ?(eps = 0.00001) obj n1 ray =
+let refraction ?(eps = 0.0001) obj n1 ray =
   let {material= {refraction_index; _}; _} = obj
   and dir_ray = Ray.direction ray in
   let p = Option.get @@ intersection obj ray in
   let normal = normal_surface obj p in
   let cos_theta = V3.dot dir_ray normal and m = Float.(n1 / refraction_index) in
-  let go_inside = cos_theta > 0. in
   (* TODO weard cos_theta is always negative ...*)
   let cos_theta1, m =
-    if go_inside then (cos_theta, m) else (-.cos_theta, 1. /. m)
+    if cos_theta > 0. then (cos_theta, 1. /. m) else (-.cos_theta, m)
   in
   let cos_theta2 = Float.(sqrt (1. - (square m * (1. - square cos_theta1)))) in
   let dir =

@@ -83,9 +83,9 @@ let intersection_with_ray sphere ray =
   if delta > 0. then
     let t1 = Float.((-.b + sqrt delta) / 2.)
     and t2 = Float.((-.b - sqrt delta) / 2.) in
-    if t1 > 0. && t2 > 0. then
-      let t = Float.fmin t1 t2 in
-      Some (Ray.apply ray t)
+    if t1 > 0. && t2 > 0. then Some (Ray.apply ray @@ Float.fmin t1 t2)
+    else if t1 > 0. && not (Float.is_close t1 0.) then Some (Ray.apply ray t1)
+    else if t2 > 0. && not (Float.is_close t2 0.) then Some (Ray.apply ray t1)
     else None
   else None
 
@@ -110,3 +110,13 @@ let%test "sphere intersection surface" =
   let sphere = v V3.zero 1. in
   let ray = Ray.v (V3.v (-1.) 0. 0.) (V3.v (-1.) 0. 0.) in
   match intersection_with_ray sphere ray with None -> true | Some _ -> false
+
+let%test "sphere intersection interieur" =
+  let sphere = v V3.zero 2. in
+  let ray = Ray.v (P3.v 0. 0. 0.) (V3.v 1. 0. 0.) in
+  match intersection_with_ray sphere ray with
+  | None ->
+      false
+  | Some p ->
+      let ep = V3.v 2. 0. 0. in
+      V3.is_close ep p

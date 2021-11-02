@@ -28,13 +28,13 @@ let minimal_scene width height =
            ; refraction_index= 1.
            ; opacity= 1. }
        ; make
-           (Sphere.v P3.(v 1. (-1.) 15.) 1.)
-           { ka= Color.white
+           (Sphere.v P3.(v 0. 0. 5.) 0.5)
+           { ka= Color.black
            ; kd= Color.white
-           ; ks= Color.white
-           ; reflexivity= 0.4
-           ; refraction_index= 1.4
-           ; opacity= 0.01 }
+           ; ks= Color.black
+           ; reflexivity= 0.01
+           ; refraction_index= 1.5
+           ; opacity= 0.00 }
        ; make
            (Sphere.v P3.(v 3. (-3.) 25.) 1.)
            { ka= Color.v_srgb 0. 0.9 0.
@@ -100,4 +100,4 @@ let image_ascii () =
   in
   Image_ascii.write image stdout
 
-let () = image_ascii ()
+let () = image_ppm ()

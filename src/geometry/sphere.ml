@@ -73,7 +73,7 @@ b = 2 * np.dot(ray_direction, ray_origin - center)
             return min(t1, t2)
 *)
 
-let intersection_with_ray sphere ray =
+let intersection sphere ray =
   let {center; radius} = sphere
   and origin = Ray.origin ray
   and direction = Ray.direction ray in
@@ -94,7 +94,7 @@ let normal {center; _} p = V3.(unit (p - center))
 let%test "sphere intersection 1" =
   let sphere = v V3.zero 1. in
   let ray = Ray.v (V3.v (-2.) 0. 0.) (V3.v 1. 0. 0.) in
-  match intersection_with_ray sphere ray with
+  match intersection sphere ray with
   | None ->
       false
   | Some p ->
@@ -104,12 +104,12 @@ let%test "sphere intersection 1" =
 let%test "sphere intersection surface" =
   let sphere = v V3.zero 1. in
   let ray = Ray.v (V3.v (-1.) 0. 0.) (V3.v (-1.) 0. 0.) in
-  match intersection_with_ray sphere ray with None -> true | Some _ -> false
+  match intersection sphere ray with None -> true | Some _ -> false
 
 let%test "sphere intersection interieur" =
   let sphere = v V3.zero 2. in
   let ray = Ray.v (P3.v 0. 0. 0.) (V3.v 1. 0. 0.) in
-  match intersection_with_ray sphere ray with
+  match intersection sphere ray with
   | None ->
       false
   | Some p ->

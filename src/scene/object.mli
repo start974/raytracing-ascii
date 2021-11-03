@@ -1,7 +1,7 @@
 open Geometry
 open Gg
 
-type geometry = Sphere.t
+type geometry = OSphere of Sphere.t | OPlane of Plane.t
 
 type material =
   { ka: Color.t
@@ -14,7 +14,13 @@ type material =
 type t
 
 val make : geometry -> material -> t
-(*[make, object, diffuse, specular] and object with associate color absobtion *)
+(**[make, geometry, material] and object with geometry and material *)
+
+val sphere : p3 -> float -> material -> t
+(**[make, p, r, material] a sphere at poisition [p] and radius [r]*)
+
+val plane : p3 -> v3 -> material -> t
+(**[make, p, n] a plane with normal [n] and one point [p]*)
 
 val material : t -> material
 

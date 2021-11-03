@@ -1,7 +1,7 @@
 open Geometry
 open Aux
 
-type geometry = Sphere.t
+type geometry = OSphere of Sphere.t | OPlane of Plane.t
 
 type material =
   { ka: Color.t
@@ -15,15 +15,33 @@ type t = {geometry: geometry; material: material}
 
 let make geometry material = {geometry; material}
 
+let sphere center radius material =
+  let geometry = OSphere (Sphere.v center radius) in
+  make geometry material
+
+let plane origin normal material =
+  let geometry = OPlane (Plane.v origin normal) in
+  make geometry material
+
 let material {material; _} = material
 
-let normal_surface {geometry; _} p = Sphere.normal geometry p
+let normal_surface {geometry; _} p =
+  match geometry with
+  | OSphere s ->
+      Sphere.normal s p
+  | OPlane p ->
+      Plane.normal p
 
 let shift_point ?(eps = 0.0001) object_scene p =
   let normal = normal_surface object_scene p in
   V3.(p + (eps * normal))
 
-let intersection {geometry; _} ray = Sphere.intersection_with_ray geometry ray
+let intersection {geometry; _} ray =
+  match geometry with
+  | OSphere s ->
+      Sphere.intersection s ray
+  | OPlane p ->
+      Plane.intersection p ray
 
 let reflexion ?(eps = 0.0001) obj ray =
   let p = Option.get @@ intersection obj ray and dir_ray = Ray.direction ray in

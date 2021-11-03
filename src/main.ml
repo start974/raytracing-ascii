@@ -1,5 +1,4 @@
 open Output
-open Geometry
 open Gg
 open Aux
 open Scene
@@ -9,7 +8,7 @@ let minimal_scene width height =
   let camera = Camera.make P3.(v 0. 0. 0.) V3.(v 0. 0. 2.) screen
   and ambiant = Color.(v_srgb 0.2 0.2 0.2)
   and lights : Light.t array =
-    [| { position= P3.v 5. 5. 0.
+    [| { position= P3.v 5. 10. 0.
        ; diffuse= V4.(500. * Color.white)
        ; specular= V4.(500. * Color.white)
        ; shiness= 100. }
@@ -19,48 +18,55 @@ let minimal_scene width height =
        ; shiness= 100. } |]
   and objects =
     Object.
-      [| make (*sphere bleu arriere plan *)
-           (Sphere.v P3.(v 0. 0. 50.) 12.)
+      [| plane (P3.v 0. (-10.) 0.) (P3.v 0. (-1.) 0.)
+           { ka= Color.v_srgb 0.5 0. 0.9
+           ; kd= Color.v_srgb 0.4 0. 0.8
+           ; ks= V4.(0.2 * Color.white)
+           ; reflexivity= 0.4
+           ; refraction_index= 0.8
+           ; opacity= 1. }
+       ; (*sphere bleu arriere plan *)
+         sphere (P3.v 0. 0. 50.) 12.
            { ka= Color.v_srgb 0. 0.9 0.9
            ; kd= Color.v_srgb 0. 0.7 0.7
-           ; ks= V4.(0.1 * Color.white)
+           ; ks= V4.(0.5 * Color.white)
            ; reflexivity= 1.
            ; refraction_index= 1.
            ; opacity= 1. }
-       ; make (* sphere transparente *)
-           (Sphere.v P3.(v 0. 0. 10.) 0.5)
+       ; (* sphere transparente *)
+         sphere (P3.v 0. 0. 10.) 0.5
            { ka= Color.black
            ; kd= Color.white
            ; ks= V4.(0.5 * Color.white)
            ; reflexivity= 0.
            ; refraction_index= 1.5
            ; opacity= 0.00 }
-       ; make (* sphere jaune avec moin de spécular*)
-           (Sphere.v P3.(v 3. 3. 25.) 1.)
+       ; (* sphere jaune avec moin de spécular*)
+         sphere (P3.v 3. 3. 25.) 1.
            { ka= Color.v_srgb 0.9 0.8 0.
            ; kd= Color.v_srgb 0.9 0.8 0.
            ; ks= V4.(0.5 * Color.white)
            ; reflexivity= 0.8
            ; refraction_index= 0.
            ; opacity= 0.8 }
-       ; make (* sphere verte *)
-           (Sphere.v P3.(v 3. (-3.) 25.) 1.)
+       ; (* sphere verte *)
+         sphere (P3.v 3. (-3.) 25.) 1.
            { ka= Color.v_srgb 0. 0.9 0.
            ; kd= Color.v_srgb 0. 0.7 0.
            ; ks= Color.white
            ; reflexivity= 1.
            ; refraction_index= 0.
            ; opacity= 1. }
-       ; make (* sphere bleu *)
-           (Sphere.v P3.(v (-3.) 3. 25.) 1.)
+       ; (* sphere bleu *)
+         sphere (P3.v (-3.) 3. 25.) 1.
            { ka= Color.v_srgb 0.0 0.8 0.5
            ; kd= Color.v_srgb 0.1 0.4 0.9
            ; ks= Color.white
            ; reflexivity= 1.
            ; refraction_index= 0.
            ; opacity= 1. }
-       ; make (* shere rouge *)
-           (Sphere.v P3.(v (-3.) (-3.) 25.) 1.)
+       ; (* shere rouge *)
+         sphere (P3.v (-3.) (-3.) 25.) 1.
            { ka= Color.v_srgb 0.9 0. 0.
            ; kd= Color.v_srgb 0.7 0. 0.
            ; ks= Color.white

@@ -18,15 +18,30 @@ let minimal_scene width height =
        ; shiness= 100. } |]
   and objects =
     Object.
-      [| plane (P3.v 0. (-10.) 0.) (P3.v 0. (-1.) 0.)
+      [| (* purple plain *)
+         plane
+           P3.(v 0. (-10.) 0.)
+           P3.(v 0. (-1.) 0.)
            { ka= Color.v_srgb 0.5 0. 0.9
            ; kd= Color.v_srgb 0.4 0. 0.8
            ; ks= V4.(0.2 * Color.white)
            ; reflexivity= 0.4
            ; refraction_index= 0.8
            ; opacity= 1. }
+       ; triangle
+           P3.(v (-3.) (-3.) 20.)
+           P3.(v (-3.) 3. 20.)
+           P3.(v 3. 3. 20.)
+           { ka= Color.v_srgb 0.9 0.5 0.9
+           ; kd= Color.v_srgb 0.7 0.2 0.7
+           ; ks= V4.(0.8 * Color.white)
+           ; reflexivity= 1.
+           ; refraction_index= 1.
+           ; opacity= 1. }
        ; (*sphere bleu arriere plan *)
-         sphere (P3.v 0. 0. 50.) 12.
+         sphere
+           P3.(v 0. 0. 50.)
+           12.
            { ka= Color.v_srgb 0. 0.9 0.9
            ; kd= Color.v_srgb 0. 0.7 0.7
            ; ks= V4.(0.5 * Color.white)
@@ -34,7 +49,9 @@ let minimal_scene width height =
            ; refraction_index= 1.
            ; opacity= 1. }
        ; (* sphere transparente *)
-         sphere (P3.v 0. 0. 10.) 0.5
+         sphere
+           P3.(v 0. 0. 10.)
+           0.5
            { ka= Color.black
            ; kd= Color.white
            ; ks= V4.(0.5 * Color.white)
@@ -42,7 +59,9 @@ let minimal_scene width height =
            ; refraction_index= 1.5
            ; opacity= 0.00 }
        ; (* sphere jaune avec moin de spécular*)
-         sphere (P3.v 3. 3. 25.) 1.
+         sphere
+           P3.(v 3. 3. 25.)
+           1.
            { ka= Color.v_srgb 0.9 0.8 0.
            ; kd= Color.v_srgb 0.9 0.8 0.
            ; ks= V4.(0.5 * Color.white)
@@ -50,7 +69,9 @@ let minimal_scene width height =
            ; refraction_index= 0.
            ; opacity= 0.8 }
        ; (* sphere verte *)
-         sphere (P3.v 3. (-3.) 25.) 1.
+         sphere
+           P3.(v 3. (-3.) 25.)
+           1.
            { ka= Color.v_srgb 0. 0.9 0.
            ; kd= Color.v_srgb 0. 0.7 0.
            ; ks= Color.white
@@ -58,7 +79,9 @@ let minimal_scene width height =
            ; refraction_index= 0.
            ; opacity= 1. }
        ; (* sphere bleu *)
-         sphere (P3.v (-3.) 3. 25.) 1.
+         sphere
+           P3.(v (-3.) 3. 25.)
+           1.
            { ka= Color.v_srgb 0.0 0.8 0.5
            ; kd= Color.v_srgb 0.1 0.4 0.9
            ; ks= Color.white
@@ -66,7 +89,9 @@ let minimal_scene width height =
            ; refraction_index= 0.
            ; opacity= 1. }
        ; (* shere rouge *)
-         sphere (P3.v (-3.) (-3.) 25.) 1.
+         sphere
+           P3.(v (-3.) (-3.) 25.)
+           1.
            { ka= Color.v_srgb 0.9 0. 0.
            ; kd= Color.v_srgb 0.7 0. 0.
            ; ks= Color.white

@@ -23,7 +23,7 @@ let apply {origin; normal} ~up point =
   let frame_x, frame_y = frame ~up normal in
   V3.(origin + (smul (V2.x point) frame_x + smul (V2.y point) frame_y))
 
-let intersection {normal; origin} ray =
+let intersection ?(keep_inv_dir = false) {normal; origin} ray =
   (*
      vec normal (n)= (a, b, c)
      point origin (O)= (Oa, Ob, Oc)
@@ -52,7 +52,8 @@ let intersection {normal; origin} ray =
   let ray_dir = Ray.direction ray in
   let n_dot_r = V3.(dot normal ray_dir) in
   (*print_endline @@ Float.to_string n_dot_r ;*)
-  if n_dot_r <= 0. && n_dot_r <> -1. then None
+  if ((not keep_inv_dir) && n_dot_r < 0. && n_dot_r <> -1.) || n_dot_r = 0. then
+    None
   else
     let d = V3.(dot origin normal) and ray_origin = Ray.origin ray in
     let n_dot_a = V3.dot normal ray_origin in

@@ -14,23 +14,23 @@ let normal triangle = V3.(unit (cross (v_edge1 triangle) (v_edge2 triangle)))
 let intersection triangle ray =
   (* Möller–Trumbore algorithme *)
   let n = normal triangle in
-  let dir_ray = V3.unit @@ Ray.direction ray in
+  let dir_ray = Ray.direction ray in
   let n_dot_r = V3.dot n dir_ray in
   if Float.is_close n_dot_r 0. then None
   else
-    let edge_1 = V3.(unit @@ v_edge1 triangle)
-    and edge_2 = V3.(unit @@ v_edge2 triangle)
-    and p0, _, _ = triangle in
-    let p_vec = V3.(unit (cross dir_ray edge_2)) in
+    let edge_1 = v_edge1 triangle
+    and edge_2 = v_edge2 triangle
+    and p0, _, _ = triangle
+    and pt = Ray.origin ray in
+    let p_vec = V3.cross dir_ray edge_2 in
     let det = V3.dot edge_1 p_vec in
     if Float.is_close (Float.abs det) 0. then None
     else
-      let pt = Ray.origin ray in
-      let t_vec = V3.(unit @@ (pt - p0)) in
+      let t_vec = V3.(pt - p0) in
       let u = Float.(V3.dot t_vec p_vec / det) in
       if u < 0. || u > 1. then None
       else
-        let q_vec = V3.(unit @@ cross t_vec edge_1) in
+        let q_vec = V3.cross t_vec edge_1 in
         let v = Float.(V3.dot dir_ray q_vec / det) in
         if Float.(v < 0. || u + v > 1.) then None
         else

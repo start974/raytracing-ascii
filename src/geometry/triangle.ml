@@ -18,32 +18,24 @@ let intersection triangle ray =
   let n_dot_r = V3.dot n dir_ray in
   if Float.is_close n_dot_r 0. then None
   else
-    let o_r = Ray.origin ray and o_t, _, _ = triangle in
-    let o_tr = V3.(unit (o_r - o_t)) in
-    let i_r =
-      let n_dot_otr = V3.dot n o_tr in
-      Float.(-.n_dot_otr / n_dot_r)
-    in
-    if i_r < 0. || i_r > 1. then None
+    let edge_1 = V3.(unit @@ v_edge1 triangle)
+    and edge_2 = V3.(unit @@ v_edge2 triangle)
+    and p0, _, _ = triangle in
+    let p_vec = V3.(unit (cross dir_ray edge_2)) in
+    let det = V3.dot edge_1 p_vec in
+    if Float.is_close (Float.abs det) 0. then None
     else
-      let q =
-        let u_vec = V3.(unit (v_edge1 triangle)) in
-        V3.(unit (cross u_vec o_tr))
-      in
-      let i_u =
-        let q_dot_r = V3.dot q dir_ray in
-        Float.(q_dot_r / n_dot_r)
-      in
-      if Float.(i_u < 0. || i_r + i_u > 1.) then None
+      let pt = Ray.origin ray in
+      let t_vec = V3.(unit @@ (pt - p0)) in
+      let u = Float.(V3.dot t_vec p_vec / det) in
+      if u < 0. || u > 1. then None
       else
-        let i_v =
-          let v_vec = V3.(unit (v_edge2 triangle)) in
-          let v_dot_q = V3.dot v_vec q in
-          Float.(v_dot_q / n_dot_r)
-        in
-        if i_v > 0. && not (Float.is_close i_v 0.) then
-          Some V3.(o_r + (i_v * dir_ray))
-        else None
+        let q_vec = V3.(unit @@ cross t_vec edge_1) in
+        let v = Float.(V3.dot dir_ray q_vec / det) in
+        if Float.(v < 0. || u + v > 1.) then None
+        else
+          let t = Float.(V3.dot edge_2 q_vec / det) in
+          Some V3.(pt + (t * dir_ray))
 
 let%test "triangle intersection" =
   let triangle =

@@ -29,9 +29,9 @@ let minimal_scene width height =
            ; refraction_index= 0.8
            ; opacity= 1. }
        ; triangle
-           P3.(v (-3.) (-3.) 20.)
-           P3.(v (-3.) 3. 20.)
-           P3.(v 3. 3. 20.)
+           P3.(v (-1.) (-1.) 25.)
+           P3.(v (-1.) 1. 25.)
+           P3.(v 1. 1. 25.)
            { ka= Color.v_srgb 0.9 0.5 0.9
            ; kd= Color.v_srgb 0.7 0.2 0.7
            ; ks= V4.(0.8 * Color.white)

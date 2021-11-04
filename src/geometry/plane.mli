@@ -11,8 +11,9 @@ val origin : t -> p3
 val normal : t -> v3
 (** [normal] of plane *)
 
-val intersection : t -> Ray.t -> p3 option
+val intersection : ?keep_inv_dir:bool -> t -> Ray.t -> p3 option
 (** [intersection s r] return the intersection with plane with the ray [r]. 
-    If there is none, returns [None].*)
+    If there is none, returns [None].
+    If [keep_inv_dir] is set to true [ray] whitch is in same direction is none (default false)*)
 
 val apply : t -> up:v3 -> v2 -> v3

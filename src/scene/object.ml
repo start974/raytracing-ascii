@@ -1,7 +1,10 @@
 open Geometry
 open Aux
 
-type geometry = OSphere of Sphere.t | OPlane of Plane.t
+type geometry =
+  | OSphere of Sphere.t
+  | OPlane of Plane.t
+  | OTriangle of Triangle.t
 
 type material =
   { ka: Color.t
@@ -23,6 +26,12 @@ let plane origin normal material =
   let geometry = OPlane (Plane.v origin normal) in
   make geometry material
 
+let triangle p1 p2 p3 material =
+  let geometry = OTriangle (Triangle.v p1 p2 p3) in
+  make geometry material
+
+let mesh arr material = Array.map (fun t -> make (OTriangle t) material) arr
+
 let material {material; _} = material
 
 let normal_surface {geometry; _} p =
@@ -31,6 +40,8 @@ let normal_surface {geometry; _} p =
       Sphere.normal s p
   | OPlane p ->
       Plane.normal p
+  | OTriangle t ->
+      Triangle.normal t
 
 let shift_point ?(eps = 0.0001) object_scene p =
   let normal = normal_surface object_scene p in
@@ -42,6 +53,8 @@ let intersection {geometry; _} ray =
       Sphere.intersection s ray
   | OPlane p ->
       Plane.intersection p ray
+  | OTriangle t ->
+      Triangle.intersection t ray
 
 let reflexion ?(eps = 0.0001) obj ray =
   let p = Option.get @@ intersection obj ray and dir_ray = Ray.direction ray in

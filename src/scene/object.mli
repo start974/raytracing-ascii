@@ -1,7 +1,10 @@
 open Geometry
 open Gg
 
-type geometry = OSphere of Sphere.t | OPlane of Plane.t
+type geometry =
+  | OSphere of Sphere.t
+  | OPlane of Plane.t
+  | OTriangle of Triangle.t
 
 type material =
   { ka: Color.t
@@ -21,6 +24,12 @@ val sphere : p3 -> float -> material -> t
 
 val plane : p3 -> v3 -> material -> t
 (**[make, p, n] a plane with normal [n] and one point [p]*)
+
+val triangle : p3 -> p3 -> p3 -> material -> t
+(** [make p1, p2, p3] a triangle with 3 point*)
+
+val mesh : Triangle.t array -> material -> t array
+(** [make] a mesh with many triangle and apply material *)
 
 val material : t -> material
 

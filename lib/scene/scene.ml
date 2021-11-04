@@ -49,7 +49,7 @@ let illumination {lights; objects; ambiant; _} obj p ray =
   and lights = Illumination.lights_contribute lights objects p in
   lights |> Array.map f_color |> Array.fold_left V4.add color_a
 
-let rec get_color_of_ray ?(max_iteration = 3) scene ray =
+let rec get_color_of_ray ?(max_iteration = 6) scene ray =
   let {objects; ambiant; _} = scene in
   if max_iteration = 0 then ambiant
   else

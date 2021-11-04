@@ -1,0 +1,3 @@
+(executable
+ (name main)
+ (libraries output scene aux geometry graphics parmap))

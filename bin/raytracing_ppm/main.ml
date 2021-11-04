@@ -129,4 +129,4 @@ let image_ascii () =
   in
   Image_ascii.write image stdout
 
-let () = image_ascii ()
+let () = image_ppm ()

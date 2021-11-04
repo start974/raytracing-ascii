@@ -1,8 +1,8 @@
-open Output
 open Gg
 open Aux
 open Scene
 open Graphics
+open Geometry
 
 let minimal_scene width height =
   let screen = Screen.make width height 1. in
@@ -19,7 +19,7 @@ let minimal_scene width height =
        ; shiness= 100. } |]
   and objects =
     Object.
-      [| (* purple plain *)
+      [| (* purple plane *)
          plane
            P3.(v 0. 0. (-10.))
            P3.(v 0. 0. (-1.))
@@ -58,7 +58,7 @@ let minimal_scene width height =
            ; kd= Color.white
            ; ks= V4.(0.5 * Color.white)
            ; reflexivity= 0.
-           ; refraction_index= 1.5
+           ; refraction_index= 1.3
            ; opacity= 0.00 }
        ; (* sphere jaune avec moin de spécular*)
          sphere
@@ -103,55 +103,25 @@ let minimal_scene width height =
   in
   Scene.make camera ambiant lights objects
 
-let image_ppm () =
-  let width, height = (700, 700) in
-  let scene = minimal_scene width height in
-  let image =
-    Image_PPM.init width height (fun y x ->
-        let color_scene = Scene.get_color scene x y in
-        Color.int_triple color_scene )
-  in
-  let file = open_out "test.ppm" in
-  Image_PPM.write image file ; close_out file
+let x_def = 250
 
-let image_pgm () =
-  let width, height = (700, 700) in
-  let scene = minimal_scene width height in
-  let image =
-    Image_PGM.init width height (fun y x ->
-        let color_scene = Scene.get_color scene x y in
-        let gray = Color.to_gray color_scene in
-        Float.(to_int (gray * 15.)) )
-  in
-  let file = open_out "test.pgm" in
-  Image_PGM.write image file ; close_out file
+let y_def = 250
 
-let image_ascii () =
-  let width, height = (200, 200) in
-  let scene = minimal_scene width height in
-  let chars =
-    "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
-  in
-  let pixel_maker = MkPixel_ascii.make chars in
-  let image =
-    Image_ascii.init width height (fun y x ->
-        let color_scene = Scene.get_color scene x y in
-        let gray = Color.to_gray color_scene in
-        MkPixel_ascii.create_pixel pixel_maker gray )
-  in
-  Image_ascii.write image stdout
-
-let x_def = 500
-
-let y_def = 500
+let upscaling = 4
 
 let () =
   open_graph
-    (String.concat "" [" "; string_of_int x_def; "x"; string_of_int y_def])
+    (String.concat ""
+       [ " "
+       ; string_of_int (x_def * upscaling)
+       ; "x"
+       ; string_of_int (y_def * upscaling) ] )
 
 let scene = ref (minimal_scene x_def y_def)
 
 let get_camera () = Scene.camera !scene
+
+let up = V3.v 0. 0. 1.
 
 let move_forward () =
   let camera = get_camera () in
@@ -169,34 +139,39 @@ let move_backward () =
   let camera = Camera.replaced ~position camera in
   scene := Scene.replaced ~camera !scene
 
-
 let move_left () =
   let camera = get_camera () in
-  let forward = Camera.forward camera in
   let position = Camera.position camera in
-  let frame = Plane
-  let position = V3.(position + (1. * unit forward)) in
+  let fx, _fy = Plane.frame ~up (Camera.screen_plane camera) in
+  let position = V3.(position + (1. * unit fx)) in
   let camera = Camera.replaced ~position camera in
   scene := Scene.replaced ~camera !scene
 
 let move_right () =
   let camera = get_camera () in
-  let forward = Camera.forward camera in
   let position = Camera.position camera in
-  let position = V3.(position - (1. * unit forward)) in
+  let fx, _fy = Plane.frame ~up (Camera.screen_plane camera) in
+  let position = V3.(position - (1. * unit fx)) in
+  let camera = Camera.replaced ~position camera in
+  scene := Scene.replaced ~camera !scene
+
+let move_up () =
+  let camera = get_camera () in
+  let position = Camera.position camera in
+  let _fx, fy = Plane.frame ~up (Camera.screen_plane camera) in
+  let position = V3.(position + (1. * unit fy)) in
+  let camera = Camera.replaced ~position camera in
+  scene := Scene.replaced ~camera !scene
+
+let move_down () =
+  let camera = get_camera () in
+  let position = Camera.position camera in
+  let _fx, fy = Plane.frame ~up (Camera.screen_plane camera) in
+  let position = V3.(position - (1. * unit fy)) in
   let camera = Camera.replaced ~position camera in
   scene := Scene.replaced ~camera !scene
 
 let rotate_left () =
-  let camera = get_camera () in
-  let forward = Camera.forward camera in
-  let forward = V3.to_spherical forward in
-  let forward = V3.(v (x forward) Float.(y forward + 0.1) (z forward)) in
-  let forward = V3.of_spherical forward in
-  let camera = Camera.replaced ~forward camera in
-  scene := Scene.replaced ~camera !scene
-
-let rotate_right () =
   let camera = get_camera () in
   let forward = Camera.forward camera in
   let forward = V3.to_spherical forward in
@@ -205,23 +180,44 @@ let rotate_right () =
   let camera = Camera.replaced ~forward camera in
   scene := Scene.replaced ~camera !scene
 
+let rotate_right () =
+  let camera = get_camera () in
+  let forward = Camera.forward camera in
+  let forward = V3.to_spherical forward in
+  let forward = V3.(v (x forward) Float.(y forward + 0.1) (z forward)) in
+  let forward = V3.of_spherical forward in
+  let camera = Camera.replaced ~forward camera in
+  scene := Scene.replaced ~camera !scene
+
+let x_array = Array.init x_def Fun.id
+
+let upscale_image factor image =
+  let w = Array.length image and h = Array.length image.(0) in
+  let w' = factor * w and h' = factor * h in
+  Array.init_matrix w' h' (fun x y -> image.(x / factor).(y / factor))
+
 let draw_scene () =
   let scene = !scene in
-  for x = 0 to x_def do
-    for y = 0 to y_def do
-      let color = Scene.get_color scene x y |> Color.to_int in
-      set_color color ; plot x y
-    done
-  done
+  Array.make_matrix x_def y_def 0
+  |> Parmap.array_parmapi (fun y xs ->
+         xs
+         |> Array.mapi (fun x _ ->
+                let x = x_def - x in
+                Scene.get_color scene x y |> Color.to_int ) )
+  |> upscale_image upscaling |> Graphics.make_image
+  |> fun i -> Graphics.draw_image i 0 0
 
 let () =
   while true do
     draw_scene () ;
     let s = wait_next_event [Key_pressed] in
-    if s.keypressed then (
-      if s.key = 'w' || s.key = 'z' then move_forward () ;
-      if s.key = 's' then move_backward () ;
-      if s.key = 'a' then rotate_left () ;
-      if s.key = 'd' then rotate_right () )
+    if s.key = 'w' || s.key = 'z' then move_forward () ;
+    if s.key = 's' then move_backward () ;
+    if s.key = 'a' || s.key = 'q' then move_left () ;
+    if s.key = 'd' then move_right () ;
+    if s.key = 'i' then move_up () ;
+    if s.key = 'k' then move_down () ;
+    if s.key = 'j' then rotate_left () ;
+    if s.key = 'l' then rotate_right ()
   done ;
   exit 0

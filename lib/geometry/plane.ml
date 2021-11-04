@@ -13,14 +13,15 @@ let mem {origin; normal} point =
   let point = V3.(point - origin) in
   V3.is_orthogonal point normal
 
-let frame ~up normal =
+let frame ~up {normal; _} =
   assert (not @@ V3.is_colinear normal up) ;
   let fx = V3.cross normal up in
   let fy = V3.cross normal fx in
   V3.(unit fx, unit fy)
 
-let apply {origin; normal} ~up point =
-  let frame_x, frame_y = frame ~up normal in
+let apply plane ~up point =
+  let origin = plane.origin in
+  let frame_x, frame_y = frame ~up plane in
   V3.(origin + (smul (V2.x point) frame_x + smul (V2.y point) frame_y))
 
 let intersection ?(keep_inv_dir = false) {normal; origin} ray =
@@ -80,22 +81,19 @@ let%test "plane not mem" =
 let%test "plane frame 1" =
   let plane = v V3.(v 0. 0. 0.) V3.(v 1. 0. 0.) in
   let up = V3.(v 0. 0. 1.) in
-  let normal = normal plane in
-  let fx, fy = frame ~up normal in
+  let fx, fy = frame ~up plane in
   V3.is_orthogonal fx fy && mem plane fx && mem plane fy
 
 let%test "plane frame 2" =
   let plane = v V3.(v 0. 0. 0.) V3.(v 0. 1. 0.) in
   let up = V3.(v 0. 0. 1.) in
-  let normal = normal plane in
-  let fx, fy = frame ~up normal in
+  let fx, fy = frame ~up plane in
   V3.is_orthogonal fx fy && mem plane fx && mem plane fy
 
 let%test "plane frame 2" =
   let plane = v V3.(v 0. 0. 0.) V3.(v 1. 1. 1.) in
   let up = V3.(v 0. 0. 1.) in
-  let normal = normal plane in
-  let fx, fy = frame ~up normal in
+  let fx, fy = frame ~up plane in
   V3.is_orthogonal fx fy && mem plane fx && mem plane fy
 
 let%test "plane no intersection" =

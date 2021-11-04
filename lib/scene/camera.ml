@@ -17,14 +17,12 @@ let position {position; _} = position
 
 let forward {forward; _} = forward
 
-
-
 let middle_screen camera = V3.(position camera + forward camera)
 
-let plane camera = Plane.v (middle_screen camera) camera.forward
+let screen_plane camera = Plane.v (middle_screen camera) camera.forward
 
 let screen_point camera =
-  let plane = plane camera in
+  let plane = screen_plane camera in
   fun point -> Plane.apply plane ~up point
 
 let screen_point camera =

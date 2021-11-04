@@ -7,6 +7,8 @@ type t
 val make : p3 -> V3.t -> Screen.t -> t
 (** [make] camera with [position], [forward vector] *)
 
+val replaced : ?position:v3 -> ?forward:v3 -> ?screen:Screen.t -> t -> t
+
 val position : t -> p3
 (**[position] position of camera *)
 

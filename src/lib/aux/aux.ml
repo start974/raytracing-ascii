@@ -7,3 +7,5 @@ module Float = IFloat
 module Int = Int
 module List = List
 module V3 = V3
+
+include Printf

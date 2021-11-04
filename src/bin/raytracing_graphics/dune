@@ -1,0 +1,9 @@
+;(library
+; (name ascii_output))
+
+;(library
+; (name pixmap_output))
+
+(executable
+ (name main)
+ (libraries output scene aux geometry graphics))

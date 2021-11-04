@@ -6,3 +6,5 @@ val to_string : t -> string
 
 val to_gray : t -> float
 (**[to_gray, color] make a mean of r,g,b, in float *)
+
+val to_int : t -> int

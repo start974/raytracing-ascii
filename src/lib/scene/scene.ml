@@ -12,6 +12,14 @@ type t =
 
 let make camera ambiant lights objects = {camera; ambiant; lights; objects}
 
+let replaced ?camera ?ambiant ?lights ?objects scene =
+  { camera= Option.value ~default:scene.camera camera
+  ; ambiant= Option.value ~default:scene.ambiant ambiant
+  ; lights= Option.value ~default:scene.lights lights
+  ; objects= Option.value ~default:scene.objects objects }
+
+let camera scene = scene.camera
+
 let ray scene =
   let ray = Camera.ray scene.camera in
   fun x y -> ray x y
@@ -41,7 +49,7 @@ let illumination {lights; objects; ambiant; _} obj p ray =
   and lights = Illumination.lights_contribute lights objects p in
   lights |> Array.map f_color |> Array.fold_left V4.add color_a
 
-let rec get_color_of_ray ?(max_iteration = 10) scene ray =
+let rec get_color_of_ray ?(max_iteration = 3) scene ray =
   let {objects; ambiant; _} = scene in
   if max_iteration = 0 then ambiant
   else

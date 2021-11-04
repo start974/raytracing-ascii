@@ -2,19 +2,26 @@ open Gg
 open Aux
 open Geometry
 
-type t = {position: p3; forward_vec: V3.t; screen: Screen.t}
+type t = {position: p3; forward: V3.t; screen: Screen.t}
 
-let up = V3.v 0. 1. 0. (*todo : make this a parameter *)
+let up = V3.v 0. 0. 1. (*todo : make this a parameter *)
 
-let make position forward_vec screen = {position; forward_vec; screen}
+let make position forward screen = {position; forward; screen}
+
+let replaced ?position ?forward ?screen camera =
+  { position= Option.value ~default:camera.position position
+  ; forward= Option.value ~default:camera.forward forward
+  ; screen= Option.value ~default:camera.screen screen }
 
 let position {position; _} = position
 
-let forward {forward_vec; _} = forward_vec
+let forward {forward; _} = forward
+
+
 
 let middle_screen camera = V3.(position camera + forward camera)
 
-let plane camera = Plane.v (middle_screen camera) camera.forward_vec
+let plane camera = Plane.v (middle_screen camera) camera.forward
 
 let screen_point camera =
   let plane = plane camera in

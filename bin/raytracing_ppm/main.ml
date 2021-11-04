@@ -5,7 +5,7 @@ open Scene
 
 let minimal_scene width height =
   let screen = Screen.make width height 1. in
-  let camera = Camera.make P3.(v 0. 0. 0.) V3.(v 0. 0. 2.) screen
+  let camera = Camera.make P3.(v 0. 0. 0.) V3.(v 0. 1. 0.) screen
   and ambiant = Color.(v_srgb 0.2 0.2 0.2)
   and lights : Light.t array =
     [| { position= P3.v 5. 10. 0.
@@ -20,28 +20,17 @@ let minimal_scene width height =
     Object.
       [| (* purple plain *)
          plane
-           P3.(v 0. (-10.) 0.)
-           P3.(v 0. (-1.) 0.)
+           P3.(v 0. 0. (-10.))
+           P3.(v 0. 0. (-1.))
            { ka= Color.v_srgb 0.5 0. 0.9
            ; kd= Color.v_srgb 0.4 0. 0.8
            ; ks= V4.(0.2 * Color.white)
            ; reflexivity= 0.4
            ; refraction_index= 0.8
            ; opacity= 1. }
-         (*;triangle
-            P3.(v (-0.) (-2.) 15.)
-            P3.(v (-1.) 3. 10.)
-            P3.(v 2. 0. 20.)
-            { ka= Color.v_srgb 0.9 0.5 0.9
-            ; kd= Color.v_srgb 0.7 0.2 0.7
-            ; ks= V4.(0.8 * Color.white)
-            ; reflexivity= 1.
-            ; refraction_index= 1.
-            ; opacity= 1. }
-         *)
        ; (*sphere bleu arriere plan *)
          sphere
-           P3.(v 0. 0. 50.)
+           P3.(v 0. 50. 0.)
            12.
            { ka= Color.v_srgb 0. 0.9 0.9
            ; kd= Color.v_srgb 0. 0.7 0.7
@@ -51,7 +40,7 @@ let minimal_scene width height =
            ; opacity= 1. }
        ; (* sphere transparente *)
          sphere
-           P3.(v 0. 0. 10.)
+           P3.(v 0. 10. 0.)
            0.5
            { ka= Color.black
            ; kd= Color.white
@@ -61,7 +50,7 @@ let minimal_scene width height =
            ; opacity= 0.00 }
        ; (* sphere jaune avec moin de spécular*)
          sphere
-           P3.(v 3. 3. 25.)
+           P3.(v 3. 25. 3.)
            1.
            { ka= Color.v_srgb 0.9 0.8 0.
            ; kd= Color.v_srgb 0.9 0.8 0.
@@ -71,7 +60,7 @@ let minimal_scene width height =
            ; opacity= 0.8 }
        ; (* sphere verte *)
          sphere
-           P3.(v 3. (-3.) 25.)
+           P3.(v 3. 25. (-3.))
            1.
            { ka= Color.v_srgb 0. 0.9 0.
            ; kd= Color.v_srgb 0. 0.7 0.
@@ -81,7 +70,7 @@ let minimal_scene width height =
            ; opacity= 1. }
        ; (* sphere bleu *)
          sphere
-           P3.(v (-3.) 3. 25.)
+           P3.(v (-3.) 25. 3.)
            1.
            { ka= Color.v_srgb 0.0 0.8 0.5
            ; kd= Color.v_srgb 0.1 0.4 0.9
@@ -91,7 +80,7 @@ let minimal_scene width height =
            ; opacity= 1. }
        ; (* shere rouge *)
          sphere
-           P3.(v (-3.) (-3.) 25.)
+           P3.(v (-3.) 25. (-3.))
            1.
            { ka= Color.v_srgb 0.9 0. 0.
            ; kd= Color.v_srgb 0.7 0. 0.
@@ -126,7 +115,7 @@ let image_pgm () =
   Image_PGM.write image file ; close_out file
 
 let image_ascii () =
-  let width, height = (200, 200) in
+  let width, height = (200, 75) in
   let scene = minimal_scene width height in
   let chars =
     "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
@@ -140,5 +129,4 @@ let image_ascii () =
   in
   Image_ascii.write image stdout
 
-let () = image_ppm ()
-
+let () = image_ascii ()

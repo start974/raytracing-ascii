@@ -43,5 +43,4 @@ let%test "triangle intersection" =
   in
   let ray = Ray.v P3.(v 0. 0. 0.) V3.(v 0. 0. 1.) in
   let p = Option.get @@ intersection triangle ray in
-  print_endline @@ V3.to_string p ;
   V3.is_close p @@ P3.v 0. 0. 10.

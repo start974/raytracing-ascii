@@ -28,16 +28,17 @@ let minimal_scene width height =
            ; reflexivity= 0.4
            ; refraction_index= 0.8
            ; opacity= 1. }
-       ; triangle
-           P3.(v (-2.) (-2.) 20.)
-           P3.(v (-2.) 2. 20.)
-           P3.(v 2. 0. 20.)
-           { ka= Color.v_srgb 0.9 0.5 0.9
-           ; kd= Color.v_srgb 0.7 0.2 0.7
-           ; ks= V4.(0.8 * Color.white)
-           ; reflexivity= 1.
-           ; refraction_index= 1.
-           ; opacity= 1. }
+         (*;triangle
+            P3.(v (-0.) (-2.) 15.)
+            P3.(v (-1.) 3. 10.)
+            P3.(v 2. 0. 20.)
+            { ka= Color.v_srgb 0.9 0.5 0.9
+            ; kd= Color.v_srgb 0.7 0.2 0.7
+            ; ks= V4.(0.8 * Color.white)
+            ; reflexivity= 1.
+            ; refraction_index= 1.
+            ; opacity= 1. }
+         *)
        ; (*sphere bleu arriere plan *)
          sphere
            P3.(v 0. 0. 50.)
